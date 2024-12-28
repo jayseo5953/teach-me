@@ -1,3 +1,4 @@
+import Button from "@/components/ui/Button";
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate } from "react-router-dom";
 
@@ -20,8 +21,9 @@ function Login() {
         <input name="email" type="email" />
         <label htmlFor="password">Password: </label>
         <input name="password" type="password" />
-        <button type="submit">Login</button>
+        <Button type="submit">Login</Button>
       </form>
+      <span>Use any email and password</span>
     </>
   );
 }

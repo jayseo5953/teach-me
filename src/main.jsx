@@ -5,6 +5,8 @@ import createMockServer from "@/services/api/mockServer";
 import { RouterProvider } from "react-router-dom";
 import router from "@/router";
 import AuthProvider from "@/contexts/AuthContext";
+import { ThemeProvider } from "styled-components";
+import theme from "@/theme";
 
 if (import.meta.env.MODE === "development") {
   createMockServer();
@@ -13,7 +15,9 @@ if (import.meta.env.MODE === "development") {
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
-      <RouterProvider router={router}></RouterProvider>
+      <ThemeProvider theme={theme}>
+        <RouterProvider router={router}></RouterProvider>
+      </ThemeProvider>
     </AuthProvider>
   </StrictMode>
 );
