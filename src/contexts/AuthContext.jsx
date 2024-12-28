@@ -1,9 +1,9 @@
-import { useContext, createContext, useState } from "react";
+import { useContext, createContext, useState } from 'react';
 
-import { login as loginApiCall } from "@/services/api/auth";
+import { login as loginApiCall } from '@/services/api/auth';
 const AuthContext = createContext();
 
-const AUTH_KEY = "auth";
+const AUTH_KEY = 'auth';
 
 const getUserFromLocalStorage = () => {
   const authuthInLocalStorage = localStorage.getItem(AUTH_KEY);
@@ -50,7 +50,7 @@ export default AuthProvider;
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within a AuthProvider");
+    throw new Error('useAuth must be used within a AuthProvider');
   }
   return context;
 };

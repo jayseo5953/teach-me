@@ -17,3 +17,7 @@
 ## Run the application
 
 - run `npm run dev`
+
+## Check lint
+
+- run `npm run lint`

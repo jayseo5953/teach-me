@@ -1,6 +1,6 @@
-import Button from "@/components/ui/Button";
-import { useAuth } from "@/contexts/AuthContext";
-import { Navigate } from "react-router-dom";
+import Button from '@/components/ui/Button';
+import { useAuth } from '@/contexts/AuthContext';
+import { Navigate } from 'react-router-dom';
 
 function Login() {
   const { login, user } = useAuth();
@@ -8,7 +8,7 @@ function Login() {
   const handleLogin = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    return login(formData.get("email"), formData.get("password"));
+    return login(formData.get('email'), formData.get('password'));
   };
 
   return user ? (
@@ -18,9 +18,9 @@ function Login() {
       <h1>This is Login page</h1>
       <form onSubmit={handleLogin}>
         <label htmlFor="email">Email: </label>
-        <input name="email" type="email" />
+        <input name="email" type="email" required />
         <label htmlFor="password">Password: </label>
-        <input name="password" type="password" />
+        <input name="password" type="password" required />
         <Button type="submit">Login</Button>
       </form>
       <span>Use any email and password</span>

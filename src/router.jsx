@@ -1,25 +1,25 @@
-import { createBrowserRouter } from "react-router-dom";
-import Root from "@/pages/Root";
-import Login from "@/pages/Login";
-import Dashboard from "@/pages/Dashboard";
-import ProtectedRoute from "@/layouts/ProtectedRoute";
+import { createBrowserRouter } from 'react-router-dom';
+import Root from '@/pages/Root';
+import Login from '@/pages/Login';
+import Dashboard from '@/pages/Dashboard';
+import ProtectedRoute from '@/layouts/ProtectedRoute';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Root />,
     children: [
       {
         element: <ProtectedRoute />,
         children: [
           {
-            path: "dashboard",
+            path: 'dashboard',
             element: <Dashboard />,
           },
         ],
       },
       {
-        path: "login",
+        path: 'login',
         element: <Login />,
       },
     ],
