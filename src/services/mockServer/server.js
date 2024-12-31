@@ -1,24 +1,14 @@
-import { createServer } from 'miragejs';
+import { belongsTo, createServer, hasMany, Model } from 'miragejs';
+import seeds from '@/services/mockServer/seeds';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const mockUsers = [
-  {
-    id: 1,
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-  },
-  {
-    id: 2,
-    firstName: 'Jane',
-    lastName: 'Smith',
-    email: 'jane.smith@example.com',
-  },
-];
-
 export default function createMockServer() {
-  createServer({
+  const server = createServer({
+    seeds(server) {
+      server.db.loadData(seeds);
+    },
+
     routes() {
       this.urlPrefix = API_URL;
 
@@ -27,15 +17,23 @@ export default function createMockServer() {
         // const { email, password } = JSON.parse(requestBody);
         // TODO: use the provided input to authenticate
 
-        return mockUsers[0];
+        return true;
       });
 
       // users
-      this.get('/users', () => {
-        return {
-          users: mockUsers,
-        };
+      this.get('/users', (schema, _request) => {
+        return schema.db.users;
+      });
+      this.get('/users/:id', (schema, request) => {
+        const id = request.params.id;
+        return schema.db.users.find(id);
+      });
+      this.post('/users', (schema, request) => {
+        let attrs = JSON.parse(request.requestBody);
+        return schema.db.users.insert(attrs);
       });
     },
   });
+
+  return server;
 }
