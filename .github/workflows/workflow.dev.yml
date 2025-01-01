@@ -32,6 +32,6 @@ jobs:
         run: |
           netlify deploy \
             --dir dist \
-            --site ${{ secrets.NETLIFY_SITE_ID_PROD }} \
+            --site ${{ secrets.NETLIFY_SITE_ID_DEV }} \
             --auth ${{ secrets.NETLIFY_AUTH_TOKEN }} \
             --prod
