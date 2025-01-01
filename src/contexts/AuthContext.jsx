@@ -28,7 +28,6 @@ const AuthProvider = ({ children }) => {
 
       return userToSet;
     }
-    throw new Error(res.message);
   };
 
   const logout = () => {
