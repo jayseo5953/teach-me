@@ -3,7 +3,7 @@ name: Development deployment
 on:
   push:
     branches:
-      - dk/workflows
+      - development
 
 jobs:
   build-and-deploy:
