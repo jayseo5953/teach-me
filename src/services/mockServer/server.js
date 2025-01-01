@@ -1,10 +1,25 @@
-import { belongsTo, createServer, hasMany, Model, Factory } from 'miragejs';
+import {
+  belongsTo,
+  createServer,
+  hasMany,
+  Model,
+  Factory,
+  Response,
+} from 'miragejs';
 import seeds from '@/services/mockServer/seeds';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+/**
+ * For more information about routing and data layer of mirage.js
+ * See: https://miragejs.com/docs/main-concepts/route-handlers
+ */
+
+const HARD_CODED_PASSWORD = 'password';
 export default function createMockServer() {
   const server = createServer({
+    logging: true,
+
     // models enables using schema and relaltionship
     models: {
       user: Model.extend({ movies: hasMany() }),
@@ -33,9 +48,20 @@ export default function createMockServer() {
       this.urlPrefix = API_URL;
 
       // auth
-      this.post('/auth/login', (/* _schema, { requestBody } */) => {
-        // const { email, password } = JSON.parse(requestBody);
-        return true;
+      this.post('/auth/login', (schema, { requestBody }) => {
+        const { email, password } = JSON.parse(requestBody);
+        const userFound = schema.users.findBy({ email });
+        const isPasswordMatch = password === HARD_CODED_PASSWORD;
+
+        if (!userFound || !isPasswordMatch) {
+          return new Response(
+            401,
+            { 'Content-Type': 'application/json' },
+            { error: 'Invalid username or password' }
+          );
+        }
+
+        return userFound;
       });
 
       // users
