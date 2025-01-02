@@ -4,9 +4,10 @@ import { parseError } from '@/utils/parseError';
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import styled from 'styled-components';
+import Typography from '@mui/material/Typography';
 
 const ErrorMessage = styled.div`
-  color: ${({ theme }) => theme.colors.brand};
+  color: ${({ theme }) => theme.palette.primary.main};
 `;
 
 function Login() {
@@ -28,7 +29,8 @@ function Login() {
     <Navigate to="/dashboard" replace />
   ) : (
     <>
-      <h1>This is Login page</h1>
+      <Typography variant="h1">This is Login page</Typography>
+
       <form onSubmit={handleLogin}>
         <label htmlFor="email">Email: </label>
         <input

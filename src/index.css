@@ -1,5 +1,169 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  /* Workspace Widths */
+  --workspace-sm: 390px;
+  --workspace-md: 834px;
+  --workspace-lg: 1366px;
+  --workspace-xl: 1630px;
+
+  /* Side Margins */
+  --margin-sm: 24px;
+  --margin-sm-percent: 4%;
+  --content-width-percent: 84%;
+
+  /* Font Family */
+  --font-family: 'Pretendard Variable', -apple-system, BlinkMacSystemFont,
+    system-ui, Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  /* Font Weight */
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semiBold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extraBold: 800;
+
+  /* Font Sizes */
+  --font-size-xl: 34px; /* H1 */
+  --font-size-lg: 28px; /* H2 */
+  --font-size-md: 22px; /* H3 */
+  --font-size-sm: 20px; /* H4 */
+  --font-size-xs: 17px; /* Headline, Body */
+  --font-size-xxs: 16px; /* Body 2 */
+  --font-size-xxxs: 15px; /* Body 3, Subhead */
+  --font-size-footnote: 13px;
+  --font-size-caption-1: 12px;
+  --font-size-caption-2: 11px;
+
+  --font-size-compact-xl: 26px; /* Compact H1 */
+  --font-size-compact-lg: 22px; /* Compact H2 */
+  --font-size-compact-md: 17px; /* Compact H3 */
+  --font-size-compact-sm: 15px; /* Compact H4 */
+  --font-size-compact-xs: 14px; /* Compact Body */
+
+  /* Line Heights */
+  --line-height-xl: 41px; /* H1 */
+  --line-height-lg: 34px; /* H2 */
+  --line-height-md: 28px; /* H3 */
+  --line-height-sm: 24.3px; /* Headline */
+  --line-height-footnote: 20px;
+
+  --line-height-compact-xl: 32px; /* Compact H1 */
+  --line-height-compact-lg: 26px; /* Compact H2 */
+  --line-height-compact-md: 22px; /* Compact H3 */
+}
+
+/* Global Typography Styles */
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-regular);
+}
+
+/* 🅰️ Headings */
+
+/* H1 */
+h1 {
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-xl);
+  font-weight: var(--font-weight-semiBold);
+  letter-spacing: var(--letter-spacing-default);
+}
+
+/* H2 */
+h2 {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-lg);
+  font-weight: var(--font-weight-semiBold);
+  letter-spacing: var(--letter-spacing-default);
+}
+
+/* H3 */
+h3 {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  font-weight: var(--font-weight-semiBold);
+  letter-spacing: var(--letter-spacing-default);
+}
+
+/* H4 */
+h4 {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-md);
+  font-weight: var(--font-weight-semiBold);
+  letter-spacing: var(--letter-spacing-default);
+}
+
+/* 📰 Headline */
+h5 {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-sm);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-default);
+}
+
+/* 📄 Paragraphs (Body Text) */
+p {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-md);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-default);
+}
+
+/* 📄 Body Variants */
+p.body2 {
+  font-size: var(--font-size-xxs);
+  font-weight: var(--font-weight-regular);
+}
+
+p.body3 {
+  font-size: var(--font-size-xxxs);
+  font-weight: var(--font-weight-regular);
+}
+
+/* 📝 Subhead */
+h6 {
+  font-size: var(--font-size-xxxs);
+  line-height: var(--line-height-sm);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-default);
+}
+
+/* 🦶 Footnote */
+small {
+  font-size: var(--font-size-footnote);
+  line-height: var(--line-height-footnote);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-default);
+}
+
+/* 📝 Captions */
+caption {
+  font-size: var(--font-size-caption-1);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-default);
+}
+
+/* 📱 Responsive Typography */
+@media (min-width: 735px) {
+  h1 {
+    font-size: var(--font-size-compact-xl);
+    line-height: var(--line-height-compact-xl);
+  }
+  h2 {
+    font-size: var(--font-size-compact-lg);
+    line-height: var(--line-height-compact-lg);
+  }
+  h3 {
+    font-size: var(--font-size-compact-md);
+    line-height: var(--line-height-compact-md);
+  }
+  h4 {
+    font-size: var(--font-size-compact-sm);
+  }
+  p {
+    font-size: var(--font-size-compact-xs);
+  }
+  body {
+    font-size: var(--font-size-compact-xs);
+  }
 }
