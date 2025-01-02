@@ -21,6 +21,13 @@ const theme = createTheme({
     },
   },
 
+  workspaces: {
+    sm: '390px',
+    md: '834px',
+    lg: '1366px',
+    xl: '1630px',
+  },
+
   palette: {
     primary: {
       main: '#556cd6',
