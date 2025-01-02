@@ -19,17 +19,14 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(getUserFromLocalStorage());
 
   const login = async (email, password) => {
-    try {
-      const res = await loginApiCall(email, password);
-      if (res.data) {
-        setUser(res.data);
-        localStorage.setItem(AUTH_KEY, JSON.stringify(res.data));
+    const res = await loginApiCall(email, password);
+    const userToSet = res.data.user;
 
-        return;
-      }
-      throw new Error(res.message);
-    } catch (err) {
-      console.error(err);
+    if (userToSet) {
+      setUser(userToSet);
+      localStorage.setItem(AUTH_KEY, JSON.stringify(userToSet));
+
+      return userToSet;
     }
   };
 
@@ -47,6 +44,7 @@ const AuthProvider = ({ children }) => {
 
 export default AuthProvider;
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

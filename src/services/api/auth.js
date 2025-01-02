@@ -1,4 +1,4 @@
-import api from '@/services/api/apiClient';
+import api from '@/services/api/client';
 
 const END_POINT = '/auth';
 
