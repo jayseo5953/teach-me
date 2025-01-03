@@ -5,12 +5,13 @@ import createMockServer from '@/services/mockServer/server';
 import { RouterProvider } from 'react-router-dom';
 import router from '@/router';
 import AuthProvider from '@/contexts/AuthContext';
-import { ThemeProvider } from 'styled-components';
-import theme from '@/theme';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from '@/styles/theme';
+import 'pretendard/dist/web/static/pretendard.css';
 
-if (import.meta.env.MODE === 'development') {
-  createMockServer();
-}
+// if (import.meta.env.MODE === 'development') {
+createMockServer();
+// }
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
