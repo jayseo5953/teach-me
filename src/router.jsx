@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Link } from 'react-router-dom';
 import Root from '@/pages/Root';
 import Login from '@/pages/Login';
 import Dashboard from '@/pages/Dashboard';
@@ -23,6 +23,15 @@ const router = createBrowserRouter([
         element: <Login />,
       },
     ],
+  },
+  {
+    path: '*',
+    element: (
+      <div>
+        Page is not found. Please check your URL. Go to{' '}
+        <Link to={'/dashboard'}>Dashboard</Link>
+      </div>
+    ),
   },
 ]);
 
