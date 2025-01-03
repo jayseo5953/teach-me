@@ -28,17 +28,11 @@ const theme = createTheme({
     xl: '1630px',
   },
 
-  palette: {
-    primary: {
-      main: '#556cd6',
-    },
-    secondary: {
-      main: '#19857b',
-    },
-    error: {
-      main: red.A400,
-    },
-  },
+  /**
+   * Once brand is determined, use colors from here
+   * https://mui.com/material-ui/customization/color/#color-palette
+   * */
+  // palette: {},
 
   typography: {
     htmlFontSize: 16,
@@ -49,7 +43,7 @@ const theme = createTheme({
     h1: {
       fontSize: '34px',
       lineHeight: 1.2,
-      fontWeight: fontWeights.semiBold, // SemiBold
+      fontWeight: fontWeights.semiBold,
       '@media (min-width:1060px)': {
         fontSize: '26px',
         lineHeight: 1.23,
@@ -60,7 +54,7 @@ const theme = createTheme({
     h2: {
       fontSize: '28px',
       lineHeight: 1.21,
-      fontWeight: fontWeights.semiBold, // SemiBold
+      fontWeight: fontWeights.semiBold,
       '@media (min-width:1060px)': {
         fontSize: '22px',
         lineHeight: 1.18,
@@ -71,7 +65,7 @@ const theme = createTheme({
     h3: {
       fontSize: '22px',
       lineHeight: 1.27,
-      fontWeight: fontWeights.semiBold, // SemiBold
+      fontWeight: fontWeights.semiBold,
       '@media (min-width:1060px)': {
         fontSize: '17px',
         lineHeight: 1.29,
@@ -82,7 +76,7 @@ const theme = createTheme({
     h4: {
       fontSize: '20px',
       lineHeight: 1.3,
-      fontWeight: fontWeights.semiBold, // SemiBold
+      fontWeight: fontWeights.semiBold,
       '@media (min-width:1060px)': {
         fontSize: '15px',
         lineHeight: 1.33,
