@@ -31,7 +31,33 @@ const theme = createTheme({
    * Once brand is determined, use colors from here
    * https://mui.com/material-ui/customization/color/#color-palette
    * */
-  palette: { background: '#F5F5F8' },
+  palette: {
+    background: '#F5F5F8',
+    primary: {
+      main: '#28ABC7',
+      light: '#61D5F2',
+      dark: '#004E5C',
+      contrastText: '#FFFFFF',
+      100: '#FFFFFF',
+      99: '#F8FDFF',
+      98: '#F0FBFF',
+      95: '#D8F6FF',
+      90: '#ACECFF',
+      80: '#61D5F2',
+      70: '#3EB9D5',
+      60: '#029EB9',
+      50: '#008399',
+      40: '#00687A',
+      35: '#005B6B',
+      30: '#004E5C',
+      25: '#00424E',
+      20: '#003640',
+      15: '#002A33',
+      10: '#001F26',
+      5: '#001419',
+      0: '#000000',
+    },
+  },
 
   typography: {
     htmlFontSize: 16,
@@ -172,4 +198,5 @@ const theme = createTheme({
   },
 });
 
+console.log(theme);
 export default theme;
