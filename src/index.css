@@ -11,8 +11,8 @@
   --content-width-percent: 84%;
 
   /* Font Family */
-  --font-family: 'Pretendard Variable', -apple-system, BlinkMacSystemFont,
-    system-ui, Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui,
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
 
   /* Font Weight */
   --font-weight-light: 300;

@@ -35,7 +35,7 @@ const theme = createTheme({
 
   typography: {
     htmlFontSize: 16,
-    fontFamily: '"Pretendard Variable", "Arial", sans-serif',
+    fontFamily: '"Pretendard", "Arial", sans-serif',
     fontSize: 14,
     fontWeights,
     // H1

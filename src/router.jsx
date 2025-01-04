@@ -1,4 +1,5 @@
-import { createBrowserRouter, Link } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
+import Link from '@/components/ui/Link';
 // import Login from '@/pages/Login';
 // import ProtectedRoute from '@/layouts/ProtectedRoute';
 import Root from '@/pages/Root';
