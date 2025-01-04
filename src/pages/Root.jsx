@@ -1,15 +1,15 @@
 import Header from '@/layouts/Header';
+import Main from '@/layouts/Main';
 import { Outlet } from 'react-router-dom';
-import styled from 'styled-components';
-
-const Container = styled.div``;
 
 function Root() {
   return (
-    <Container>
+    <>
       <Header />
-      <Outlet />
-    </Container>
+      <Main>
+        <Outlet />
+      </Main>
+    </>
   );
 }
 

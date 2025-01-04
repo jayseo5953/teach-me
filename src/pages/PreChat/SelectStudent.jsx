@@ -1,9 +1,12 @@
-import { Link } from 'react-router-dom';
+import { Link, Outlet, useMatch } from 'react-router-dom';
 
 const SelectStudent = () => {
+  const isCurrentRoute = useMatch('/pre-chat');
+
   return (
     <div>
-      <Link to="select-topic">Go to topic options</Link>
+      {isCurrentRoute && <Link to="select-topic">Go to topic options</Link>}
+      <Outlet />
     </div>
   );
 };

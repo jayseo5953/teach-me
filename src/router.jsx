@@ -17,14 +17,15 @@ const router = createBrowserRouter([
 
       {
         path: 'pre-chat',
+        element: <SelectStudent />,
         children: [
           {
-            index: true,
-            element: <SelectStudent />,
+            path: 'select-topic',
+            element: <SelectTopic />,
           },
-          { path: 'select-topic', element: <SelectTopic /> },
         ],
       },
+
       { path: 'chat', element: <Chat /> },
       { path: 'post-chat', element: <ChatSummary /> },
 
@@ -48,7 +49,7 @@ const router = createBrowserRouter([
     element: (
       <div>
         Page is not found. Please check your URL. Go to{' '}
-        <Link to={'/dashboard'}>Dashboard</Link>
+        <Link to={'/'}>Home</Link>
       </div>
     ),
   },
