@@ -46,6 +46,7 @@ export default function createMockServer() {
 
     routes() {
       this.urlPrefix = API_URL;
+      this.timing = 1000;
 
       // auth
       this.post('/auth/login', (schema, { requestBody }) => {

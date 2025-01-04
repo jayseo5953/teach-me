@@ -57,6 +57,8 @@ body {
   font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-regular);
+  background-color: #f5f5f8;
+  margin: 0;
 }
 
 /* 🅰️ Headings */

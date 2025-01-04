@@ -1,5 +1,4 @@
 import { createTheme } from '@mui/material/styles';
-import { red } from '@mui/material/colors';
 
 const fontWeights = {
   light: 300,
@@ -32,7 +31,7 @@ const theme = createTheme({
    * Once brand is determined, use colors from here
    * https://mui.com/material-ui/customization/color/#color-palette
    * */
-  // palette: {},
+  palette: { background: '#F5F5F8' },
 
   typography: {
     htmlFontSize: 16,

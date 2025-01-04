@@ -1,12 +1,14 @@
 import Header from '@/layouts/Header';
+import Main from '@/layouts/Main';
 import { Outlet } from 'react-router-dom';
 
 function Root() {
   return (
     <>
       <Header />
-      <h1>This is Root</h1>
-      <Outlet />
+      <Main>
+        <Outlet />
+      </Main>
     </>
   );
 }
