@@ -1,27 +1,46 @@
 import { createBrowserRouter, Link } from 'react-router-dom';
+// import Login from '@/pages/Login';
+// import ProtectedRoute from '@/layouts/ProtectedRoute';
 import Root from '@/pages/Root';
-import Login from '@/pages/Login';
 import Dashboard from '@/pages/Dashboard';
-import ProtectedRoute from '@/layouts/ProtectedRoute';
+import SelectStudent from '@/pages/PreChat/SelectStudent';
+import SelectTopic from '@/pages/PreChat/SelectTopic';
+import Chat from '@/pages/Chat/Chat';
+import ChatSummary from './pages/PostChat/ChatSummary';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
     children: [
+      { index: true, element: <Dashboard /> },
+
       {
-        element: <ProtectedRoute />,
+        path: 'pre-chat',
         children: [
           {
-            path: 'dashboard',
-            element: <Dashboard />,
+            index: true,
+            element: <SelectStudent />,
           },
+          { path: 'select-topic', element: <SelectTopic /> },
         ],
       },
-      {
-        path: 'login',
-        element: <Login />,
-      },
+      { path: 'chat', element: <Chat /> },
+      { path: 'post-chat', element: <ChatSummary /> },
+
+      // {
+      //   element: <ProtectedRoute />,
+      //   children: [
+      //     {
+      //       path: 'dashboard',
+      //       element: <Dashboard />,
+      //     },
+      //   ],
+      // },
+      // {
+      //   path: 'login',
+      //   element: <Login />,
+      // },
     ],
   },
   {
