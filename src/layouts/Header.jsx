@@ -1,5 +1,6 @@
 import { styled } from 'styled-components';
 import { useLocation, Link } from 'react-router-dom';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 const StyledHeader = styled.header`
   height: 25px;
@@ -40,7 +41,7 @@ const Header = () => {
       <Left>
         {!isRoot && (
           <Link to={parentPath} relative="path">
-            Back
+            <ChevronLeftIcon color="primary" />
           </Link>
         )}
       </Left>

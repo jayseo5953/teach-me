@@ -1,4 +1,5 @@
-import { Link, Outlet, useMatch } from 'react-router-dom';
+import { Outlet, useMatch } from 'react-router-dom';
+import Link from '@/components/ui/Link';
 
 const SelectStudent = () => {
   const isCurrentRoute = useMatch('/pre-chat');
