@@ -4,7 +4,6 @@ import Link from '@/components/ui/Link';
 // import ProtectedRoute from '@/layouts/ProtectedRoute';
 import Root from '@/pages/Root';
 import Dashboard from '@/pages/Dashboard';
-import SelectStudent from '@/pages/PreChat/SelectStudent';
 import SelectTopic from '@/pages/PreChat/SelectTopic';
 import Chat from '@/pages/Chat/Chat';
 import ChatSummary from './pages/PostChat/ChatSummary';

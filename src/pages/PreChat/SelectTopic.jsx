@@ -1,4 +1,3 @@
-import ChatBubble from '@/components/ui/Chat/ChatBubble';
 import ChatRow from '@/components/ui/Chat/ChatRow';
 import Link from '@/components/ui/Link';
 import PillButton from '@/components/ui/PillButton';
