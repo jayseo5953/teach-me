@@ -183,18 +183,28 @@ const Chat = () => {
         </Nav>
 
         <div>
-          {selectedTopics.map((topic) => (
-            <TopicPill
-              key={topic}
-              label={topic}
-              color={
-                remainingTopics.includes(topic) && currentTopic !== topic
-                  ? ''
-                  : 'primary'
-              }
-              icon={!remainingTopics.includes(topic) && <CheckCircle />}
-            />
-          ))}
+          <Box
+            sx={{
+              maxWidth: '100%',
+              overflow: 'scroll',
+              maxHeight: '45px',
+              display: 'flex',
+              flexWrap: 'nowrap',
+            }}
+          >
+            {selectedTopics.map((topic) => (
+              <TopicPill
+                key={topic}
+                label={topic}
+                color={
+                  remainingTopics.includes(topic) && currentTopic !== topic
+                    ? ''
+                    : 'primary'
+                }
+                icon={!remainingTopics.includes(topic) && <CheckCircle />}
+              />
+            ))}
+          </Box>
 
           <Box
             sx={{
