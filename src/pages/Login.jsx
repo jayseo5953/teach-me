@@ -7,28 +7,12 @@ import { Navigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Typography from '@mui/material/Typography';
 import { Container } from '@mui/material';
-import BrandName from '../components/ui/BrandName';
 import { useNavigate } from 'react-router-dom';
 
 const ErrorMessage = styled.div`
   margin-top: 16px;
   text-align: center;
   color: ${({ theme }) => theme.palette.error};
-`;
-
-const Header = styled.header`
-  height: ${({ theme }) => theme.sizes.headerHeight};
-  padding: 24px 0;
-  border-bottom: 1px solid;
-  border-color: ${({ theme }) => theme.palette.grey[400]};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0px;
-  right: 0px;
-  box-sizing: border-box;
 `;
 
 const HeaderText = styled.h4`
@@ -75,10 +59,7 @@ const Login = () => {
     <Navigate to="/dashboard" replace />
   ) : (
     <Container>
-      <Header>
-        <BrandName />
-      </Header>
-      <HeaderText>BrandName</HeaderText>
+      <HeaderText></HeaderText>
       <LoginText>Login</LoginText>
 
       <form onSubmit={handleLogin}>
