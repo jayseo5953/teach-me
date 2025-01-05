@@ -21,7 +21,13 @@ const Right = styled.div`
   flex: 0 0 auto;
 `;
 
-const routesToHideBackButtons = ['/chat', '/chat/post-chat'];
+const routesToHideBackButtons = [
+  '/chat',
+  '/chat/post-chat',
+  '/sign-up',
+  '/dashboard',
+  '/login',
+];
 const routesToHideHeader = ['/chat'];
 
 const Header = () => {

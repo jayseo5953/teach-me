@@ -76,8 +76,8 @@ const Chat = () => {
     if (message.trim()) {
       const payload = {
         content: message,
-        lecture: state.lecture.id
-      }
+        lecture: state.lecture.id,
+      };
       socket.emit('messageSubmitted', payload);
     }
   };

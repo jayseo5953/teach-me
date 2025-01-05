@@ -55,16 +55,17 @@ const SignUpTextContainer = styled.div`
   text-align: center;
 `;
 
-const Login = () => {
+const SignUp = () => {
   const [error, setError] = useState(null);
-  const { login, user } = useAuth();
+  const { signup, user } = useAuth();
   const navigate = useNavigate();
-  const handleLogin = async (e) => {
+
+  const handleSignUp = async (e) => {
     e.preventDefault();
     setError(null);
     const formData = new FormData(e.target);
     try {
-      await login(formData.get('email'), formData.get('password'));
+      await signup(formData.get('email'), formData.get('password'));
       navigate('/dashboard');
     } catch (e) {
       setError(parseError(e));
@@ -79,9 +80,9 @@ const Login = () => {
         <BrandName />
       </Header>
       <HeaderText>BrandName</HeaderText>
-      <LoginText>Login</LoginText>
+      <LoginText>Sign Up</LoginText>
 
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleSignUp}>
         <label htmlFor="email">
           <Typography variant="footnote">Email</Typography>
         </label>
@@ -101,7 +102,7 @@ const Login = () => {
           required
         />
         <Button variant="contained" fullWidth type="submit">
-          Login
+          Sign Up
         </Button>
         {error && (
           <ErrorMessage>
@@ -113,20 +114,20 @@ const Login = () => {
                 display: 'inline-block',
               }}
             >
-              Incorrect email or password
+              Failed to sign up
             </Typography>
           </ErrorMessage>
         )}
       </form>
       <SignUpTextContainer>
         <Typography variant="body2">
-          Don't Have an Account Yet?
+          Already have an account?
           <Typography
             variant="body2"
             color="primary"
-            onClick={() => navigate('/sign-up')}
+            onClick={() => navigate('/login')}
           >
-            Create Account
+            Login
           </Typography>
         </Typography>
       </SignUpTextContainer>
@@ -134,4 +135,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;
