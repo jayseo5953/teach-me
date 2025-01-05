@@ -1,6 +1,5 @@
 import ChatInput from '@/components/ui/Chat/ChatInput';
 import ChatRow from '@/components/ui/Chat/ChatRow';
-import Link from '@/components/ui/Link';
 import { createLecture, getLectureMessages } from '@/services/api/lectures';
 import LinearProgress from '@mui/material/LinearProgress';
 import createSocket from '@/services/webSocket/client';
@@ -13,6 +12,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import ConfirmationModal from '@/components/ConfirmationModal';
 import Button from '@/components/ui/Button';
 import { useStudent } from '@/contexts/StudentContext';
+import FinishedChatModal from '@/components/FinishedChatModal';
 
 const headerHeight = '170px';
 
@@ -68,7 +68,7 @@ const ScrollToBottomButton = styled(IconButton)`
   }
 `;
 
-const requiredSatisfactionCount = 3;
+const requiredSatisfactionCount = 2;
 
 const Chat = () => {
   const { state } = useLocation();
@@ -81,6 +81,7 @@ const Chat = () => {
   const [isFinished, setIsFinished] = useState(false);
   const [socket, setSocket] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showFinished, setShowFinished] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
   const { studentContext } = useStudent();
@@ -206,6 +207,12 @@ const Chat = () => {
           }}
         />
       )}
+      {showFinished && (
+        <FinishedChatModal
+          subject={subject}
+          onConfirm={() => navigate('post-chat', { state: { ...state } })}
+        />
+      )}
       <Header>
         <Nav>
           <Button onClick={() => setShowConfirmation(true)}>End Chat</Button>
@@ -278,9 +285,15 @@ const Chat = () => {
       <div ref={bottomRef} />
       <ChatInputWrapper>
         {isFinished ? (
-          <Link variant="contained" fullWidth to="post-chat">
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={() => {
+              setShowFinished(true);
+            }}
+          >
             Finish Chat
-          </Link>
+          </Button>
         ) : (
           <ChatInput
             minRows={1}
