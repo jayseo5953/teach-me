@@ -36,7 +36,7 @@ const theme = createTheme({
   palette: {
     background: '#F5F5F8',
     chatBubbles: {
-      textColor: 'rgba(60, 60, 67, 0.8)',
+      textColor: 'rgba(60, 60, 67, 1)',
       receiver: {
         backgroundColor: '#FFEA80',
       },
@@ -209,5 +209,4 @@ const theme = createTheme({
   },
 });
 
-console.log(theme);
 export default theme;

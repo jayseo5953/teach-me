@@ -1,13 +1,12 @@
-import React from 'react';
 import { Box, Typography } from '@mui/material';
 import styled from 'styled-components';
 
 // Chat Bubble Styles
 const ChatBubbleContainer = styled(Box)`
   position: relative;
-  max-width: 60%;
+  max-width: 75%;
   padding: 8px 12px;
-  margin: 16px;
+  margin-left: 16px;
   border-radius: 12px;
   color: ${({ theme }) => theme.palette.chatBubbles.textColor};
   background-color: ${({ sender, theme }) =>
@@ -29,7 +28,7 @@ const ChatBubbleContainer = styled(Box)`
       sender
         ? `transparent transparent transparent ${theme.palette.chatBubbles.sender.backgroundColor}`
         : `transparent ${theme.palette.chatBubbles.receiver.backgroundColor} transparent transparent`};
-    top: 50%;
+    top: 10%;
     transform: translateY(50%);
     ${(props) => (props.sender ? 'right: -8px;' : 'left: -8px;')}
   }

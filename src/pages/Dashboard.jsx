@@ -1,23 +1,12 @@
-import Input from '@/components/ui/Input';
-
+import ChatInput from '@/components/ui/Chat/ChatInput';
 import { Typography } from '@mui/material';
-import Avatar from '@/components/ui/Avatar';
+
 import styled from 'styled-components';
-import ChatBubble from '@/components/ui/ChatBubble';
+import { useNavigate } from 'react-router-dom';
+import ChatRow from '@/components/ui/Chat/ChatRow';
 
 const Title = styled.div`
   margin-bottom: 32px;
-`;
-
-const AvatarContainer = styled.div`
-  display: flex;
-  margin-top: 96px;
-`;
-
-const SquareAvatar = styled(Avatar)`
-  & {
-    border-radius: 16px;
-  }
 `;
 
 const Container = styled.div`
@@ -28,23 +17,33 @@ const Container = styled.div`
   position: relative;
   top: -50px;
 `;
+const ChatRowWrapper = styled.div`
+  margin-bottom: 96px;
+`;
 
 function Dashboard() {
-  const handleSubjectSelect = (subject) => {};
+  const navigate = useNavigate();
+  const handleSubjectSelect = (subject) => {
+    navigate('/pre-chat', { state: { subject } });
+  };
   return (
     <Container>
       <Title>
         <Typography variant="h1">What should we study today?</Typography>
       </Title>
-      <Input
-        fullWidth
-        placeholder="Quick search the subject"
-        onSubmit={handleSubjectSelect}
+      <ChatRowWrapper>
+        <ChatInput
+          fullWidth
+          placeholder="Quick search the subject"
+          onSubmit={handleSubjectSelect}
+          maxLength={80}
+        />
+      </ChatRowWrapper>
+      <ChatRow
+        avatarSize="md"
+        avatarVariant="square"
+        message="Hi teacher. Let's study!"
       />
-      <AvatarContainer>
-        <SquareAvatar src="/assets/student.png" size="md" />
-        <ChatBubble message="Hi teacher. Let's study!" />
-      </AvatarContainer>
     </Container>
   );
 }

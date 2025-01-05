@@ -2,7 +2,8 @@ import { Avatar as MuiAvatar } from '@mui/material';
 import styled from 'styled-components';
 
 const sizes = {
-  sm: '40px',
+  xs: '48px',
+  sm: '72px',
   md: '150px',
   lg: '275px',
 };

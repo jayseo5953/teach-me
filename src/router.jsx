@@ -18,13 +18,7 @@ const router = createBrowserRouter([
 
       {
         path: 'pre-chat',
-        element: <SelectStudent />,
-        children: [
-          {
-            path: 'select-topic',
-            element: <SelectTopic />,
-          },
-        ],
+        element: <SelectTopic />,
       },
 
       { path: 'chat', element: <Chat /> },

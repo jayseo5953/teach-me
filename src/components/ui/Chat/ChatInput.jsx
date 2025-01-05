@@ -2,7 +2,7 @@ import { TextField } from '@mui/material';
 import styled from 'styled-components';
 import { InputAdornment, IconButton } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import Sheet from './Sheet';
+import Sheet from '../Sheet';
 import { useState } from 'react';
 
 const StyledSheet = styled(Sheet)`
@@ -30,6 +30,7 @@ const StyledAdornment = styled(InputAdornment)`
     height: 72px;
     max-height: unset;
     align-items: end;
+    width: 40px;
   }
 `;
 
@@ -52,10 +53,11 @@ const StyledIconButton = styled(IconButton)`
   }
 `;
 
-const Input = ({
+const ChatInput = ({
   withSubmitButton = true,
   onSubmit = () => {},
   fullWidth,
+  maxLength,
   placeholder,
   rest,
 }) => {
@@ -75,11 +77,14 @@ const Input = ({
           type="submit"
           rows={3}
           onChange={(e) => setText(e.target.value)}
+          inputProps={{
+            maxLength,
+          }}
           InputProps={{
             placeholder,
             endAdornment: withSubmitButton ? (
               <StyledAdornment>
-                <StyledIconButton type="submit" edge="start" disabled={!text}>
+                <StyledIconButton type="submit" edge="end" disabled={!text}>
                   <ArrowUpwardIcon />
                 </StyledIconButton>
               </StyledAdornment>
@@ -92,4 +97,4 @@ const Input = ({
   );
 };
 
-export default Input;
+export default ChatInput;

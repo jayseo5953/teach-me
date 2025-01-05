@@ -30,8 +30,6 @@ const Title = styled.div`
 `;
 
 const Header = () => {
-  // const { user, logout } = useAuth();
-
   const location = useLocation();
 
   const isRoot = location.pathname === '/';
