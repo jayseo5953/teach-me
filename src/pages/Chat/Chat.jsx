@@ -55,8 +55,9 @@ const Chat = () => {
     socket.connect();
 
     // Event Listener for Incoming Messages
-    socket.on('message', (data) => {
-      setIncomingMessages((prev) => [...prev, data]);
+    socket.on('messageAck', (data) => {
+      const { message } = data;
+      setIncomingMessages((prev) => [...prev, message]);
     });
 
     // Handle Connection Errors
@@ -66,14 +67,18 @@ const Chat = () => {
 
     // Cleanup on Unmount
     return () => {
-      socket.off('message');
+      socket.off('messageAck');
       socket.disconnect();
     };
   }, []);
 
   const sendMessage = (message) => {
     if (message.trim()) {
-      socket.emit('message', message);
+      const payload = {
+        content: message,
+        lecture: state.lecture.id
+      }
+      socket.emit('messageSubmitted', payload);
     }
   };
 
