@@ -74,6 +74,7 @@ const Chat = () => {
   const { state } = useLocation();
   const { selectedTopics, lecture, subject } = state || {};
   const [incomingMessages, setIncomingMessages] = useState([]);
+  const [lectures, setLectures] = useState([lecture]);
   const [satisfactionCount, setSatisfactionCount] = useState(0);
   const [isScrolledUp, setIsScrolledUp] = useState(false);
   const [currentLecture, setCurrentLecture] = useState(lecture);
@@ -165,6 +166,7 @@ const Chat = () => {
           });
 
           setCurrentLecture(lecture);
+          setLectures([...lectures, lecture]);
           setSatisfactionCount(0);
           setRemainingTopics((prev) =>
             prev.filter((topic) => topic !== currentTopic)
@@ -278,7 +280,12 @@ const Chat = () => {
       <div ref={bottomRef} />
       <ChatInputWrapper>
         {isFinished ? (
-          <Link variant="contained" fullWidth to="post-chat">
+          <Link
+            variant="contained"
+            state={{ ...state, lectures }}
+            fullWidth
+            to="post-chat"
+          >
             Finish Chat
           </Link>
         ) : (
