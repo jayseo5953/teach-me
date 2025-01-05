@@ -2,7 +2,7 @@ import Link from '@/components/ui/Link';
 import { useLocation } from 'react-router-dom';
 import { useStudent } from '@/contexts/StudentContext';
 import ChatBubble from '../../components/ui/Chat/ChatBubble';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import SummaryCard from '../../components/ui/SummaryCard';
 import { useEffect, useState } from 'react';
 import { getOverallReport } from '../../services/api/reports';
@@ -35,16 +35,25 @@ const ChatSummary = () => {
 
   if (isLoading)
     return (
-      <>
-        <LoadingSpinner />
-        <div
-          style={{
-            textAlign: 'center',
-          }}
-        >
-          <Typography variant="h2">Generating final report...</Typography>
+      <Box
+        height={'70vh'}
+        display={'flex'}
+        flexDirection={'column'}
+        justifyContent={'center'}
+      >
+        <div>
+          <LoadingSpinner />
+          <div
+            style={{
+              textAlign: 'center',
+            }}
+          >
+            <Typography variant="h4" fontWeight={500}>
+              Generating final report...
+            </Typography>
+          </div>
         </div>
-      </>
+      </Box>
     );
 
   return (
