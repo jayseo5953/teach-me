@@ -72,6 +72,7 @@ const ChatInput = ({
   maxLength,
   placeholder,
   isLoading,
+  clearOnSubmit = false,
   rest,
 }) => {
   const [text, setText] = useState('');
@@ -79,6 +80,9 @@ const ChatInput = ({
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(text);
+    if (clearOnSubmit) {
+      setText('');
+    }
   };
   return (
     <StyledSheet shadowDepth="soft" isFullWidth={fullWidth}>
@@ -89,6 +93,7 @@ const ChatInput = ({
           multiline
           type="submit"
           rows={3}
+          value={text}
           disabled={isLoading}
           onChange={(e) => setText(e.target.value)}
           inputProps={{

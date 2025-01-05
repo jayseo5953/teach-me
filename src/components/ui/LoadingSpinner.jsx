@@ -24,6 +24,7 @@ const Container = styled.div`
 `;
 
 const spinnerSizes = {
+  xxs: '48px',
   xs: '120px',
   sm: '160px',
   md: '200px',

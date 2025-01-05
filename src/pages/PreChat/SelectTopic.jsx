@@ -10,7 +10,6 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import Button from '@/components/ui/Button';
 import { createLecture } from '@/services/api/lectures';
 import { useMutation } from '@tanstack/react-query';
-// import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 const ActionButtons = styled.div`
   display: flex;
@@ -26,10 +25,9 @@ const Container = styled.div`
 `;
 
 const TopicsGrid = styled.div`
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   margin-top: 16px;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
 `;
 
 const ViewMoreButton = styled(Button)`
@@ -58,9 +56,9 @@ const SelectTopic = () => {
   const mutation = useMutation({
     mutationFn: createLecture,
     onSuccess: (data) => {
-      navigate('/chat', { ...state, selectedTopics, lecture: data });
+      navigate('/chat', { state: { ...state, selectedTopics, lecture: data } });
     },
-    // onError: () => {},
+    // onError: (error) => {},
   });
 
   const startChat = async () => {
@@ -107,7 +105,8 @@ const SelectTopic = () => {
         <Button
           fullWidth
           variant="contained"
-          disabled={!selectedTopics.length || mutation.isPending}
+          disabled={!selectedTopics.length}
+          isLoading={mutation.isPending}
           onClick={startChat}
         >
           Start Chat

@@ -5,23 +5,24 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 // Styled Pill Button
 const StyledPillButton = styled(Button)`
   border-radius: 999px; /* Pill Shape */
-  padding: 2px 12px;
+  padding: 2px 24px;
   text-transform: none;
   display: flex;
   align-items: center;
-  gap: 8px;
+  position: relative;
+  margin: 4px;
   border: 1px solid
     ${({ selected, theme }) =>
-      selected ? theme.palette.primary.main : theme.palette.grey[400]};
+      selected ? theme.palette.primary.dark : theme.palette.grey[400]};
   background-color: ${({ selected, theme }) =>
-    selected ? theme.palette.primary.main : 'transparent'};
+    selected ? theme.palette.primary.dark : 'transparent'};
   color: ${({ selected, theme }) =>
     selected ? theme.palette.common.white : theme.palette.text.primary};
   transition: background-color 0.3s ease, border-color 0.3s ease;
 
-  &:hover {
-    background-color: ${({ selected, theme }) =>
-      selected ? theme.palette.primary.dark : theme.palette.grey[100]};
+  & .MuiSvgIcon-root {
+    position: absolute;
+    left: 2px;
   }
 `;
 
@@ -32,8 +33,7 @@ function PillButton({ label, selected, onClick }) {
       selected={selected}
       onClick={() => onClick(label)}
     >
-      {selected && <CheckCircleIcon fontSize="small" />}
-      {label}
+      {selected && <CheckCircleIcon fontSize="small" />} {label}
     </StyledPillButton>
   );
 }

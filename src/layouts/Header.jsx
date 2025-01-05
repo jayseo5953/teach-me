@@ -22,6 +22,7 @@ const Right = styled.div`
 `;
 
 const routesToHideBackButtons = ['/chat', '/chat/post-chat'];
+const routesToHideHeader = ['/chat'];
 
 const Header = () => {
   const location = useLocation();
@@ -29,17 +30,21 @@ const Header = () => {
   const parentPath = location.pathname.split('/').slice(0, -1).join('/') || '/';
   const hideBackButton =
     isRoot || routesToHideBackButtons.includes(location.pathname);
+
+  const hideHeader = routesToHideHeader.includes(location.pathname);
   return (
-    <StyledHeader>
-      <Left>
-        {!hideBackButton && (
-          <Link to={parentPath} state={location.state} relative="path">
-            <ChevronLeftIcon color="primary" />
-          </Link>
-        )}
-      </Left>
-      <Right />
-    </StyledHeader>
+    !hideHeader && (
+      <StyledHeader>
+        <Left>
+          {!hideBackButton && (
+            <Link to={parentPath} state={location.state} relative="path">
+              <ChevronLeftIcon color="primary" />
+            </Link>
+          )}
+        </Left>
+        <Right />
+      </StyledHeader>
+    )
   );
 };
 
