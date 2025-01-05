@@ -7,13 +7,14 @@ const StudentCard = ({ student, handleSelect, isSelected }) => {
         backgroundColor: '#ffffff',
         border: isSelected
           ? '3px solid rgba(0, 0, 0)'
-          : '0.33px solid rgba(0, 0, 0, 0.4)',
+          : '0.33px solid rgba(0, 0, 0, 0.12)',
         borderRadius: '24px',
         width: '100%',
         height: '277px',
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'column',
+        boxSizing: 'border-box',
       }}
       onClick={handleSelect}
     >

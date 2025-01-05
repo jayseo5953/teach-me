@@ -5,12 +5,14 @@ import { createLecture, getLectureMessages } from '@/services/api/lectures';
 import LinearProgress from '@mui/material/LinearProgress';
 import createSocket from '@/services/webSocket/client';
 import { useEffect, useState, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Box, Chip, IconButton, Typography } from '@mui/material';
 import { ArrowDownward, CheckCircle } from '@mui/icons-material';
-
 import { useAuth } from '@/contexts/AuthContext';
+import ConfirmationModal from '@/components/ConfirmationModal';
+import Button from '@/components/ui/Button';
+import { useStudent } from '@/contexts/StudentContext';
 
 const headerHeight = '170px';
 
@@ -78,7 +80,10 @@ const Chat = () => {
   const [remainingTopics, setRemainingTopics] = useState(selectedTopics);
   const [isFinished, setIsFinished] = useState(false);
   const [socket, setSocket] = useState(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const { studentContext } = useStudent();
 
   /* Refs */
   const bottomRef = useRef(null);
@@ -155,6 +160,8 @@ const Chat = () => {
           const lecture = await createLecture({
             subject,
             topic: remainingTopics[1],
+            userId: user.id,
+            studentId: studentContext.id,
           });
 
           setCurrentLecture(lecture);
@@ -183,11 +190,25 @@ const Chat = () => {
     };
   }, [remainingTopics, lecture, satisfactionCount, user]);
 
+  const confirmationTexts = selectedTopics.map((topic) => ({
+    text: topic,
+    finished: !remainingTopics.includes(topic),
+  }));
+
   return (
     <ChatWrapper ref={containerRef}>
+      {showConfirmation && (
+        <ConfirmationModal
+          topics={confirmationTexts}
+          onCancel={() => setShowConfirmation(false)}
+          onConfirm={() => {
+            navigate('/');
+          }}
+        />
+      )}
       <Header>
         <Nav>
-          <Link to="/">End Chat</Link>
+          <Button onClick={() => setShowConfirmation(true)}>End Chat</Button>
         </Nav>
 
         <div>
