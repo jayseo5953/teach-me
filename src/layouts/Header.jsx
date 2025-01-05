@@ -20,7 +20,7 @@ const HeaderItem = styled.div`
   z-index: 1;
   flex: 1;
   display: flex;
-  justify-content: ${({ justifyContent }) => justifyContent || 'center'};
+  justify-content: ${({ $justifyContent }) => $justifyContent || 'center'};
 `;
 
 const routesToHideBackButtons = [
@@ -46,7 +46,7 @@ const Header = () => {
   return (
     !hideHeader && (
       <StyledHeader>
-        <HeaderItem justifyContent={'flex-start'}>
+        <HeaderItem $justifyContent={'flex-start'}>
           {!hideBackButton && (
             <Link to={parentPath} state={location.state} relative="path">
               <ChevronLeftIcon color="primary" />
@@ -56,7 +56,7 @@ const Header = () => {
         <HeaderItem>
           <Logo />
         </HeaderItem>
-        <HeaderItem justifyContent={'flex-end'}>
+        <HeaderItem $justifyContent={'flex-end'}>
           {user && <Button onClick={() => logout()}>Logout</Button>}
         </HeaderItem>
       </StyledHeader>
