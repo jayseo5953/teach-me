@@ -1,13 +1,16 @@
 import ChatRow from '@/components/ui/Chat/ChatRow';
-import Link from '@/components/ui/Link';
+
 import PillButton from '@/components/ui/PillButton';
 import Sheet from '@/components/ui/Sheet';
 import { Typography } from '@mui/material';
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import Button from '@/components/ui/Button';
+import { createLecture } from '@/services/api/lectures';
+import { useMutation } from '@tanstack/react-query';
+// import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 const ActionButtons = styled.div`
   display: flex;
@@ -36,6 +39,8 @@ const ViewMoreButton = styled(Button)`
 const SelectTopic = () => {
   const [selectedTopics, setSelectedTopcis] = useState([]);
   const [shouldShowRest, setShouldShowRest] = useState(false);
+
+  const navigate = useNavigate();
   const { state } = useLocation();
   const { subject, topics } = state || {};
 
@@ -49,6 +54,19 @@ const SelectTopic = () => {
     setSelectedTopcis([...set]);
   };
   const topicsToShow = shouldShowRest ? topics : topics.slice(0, 9);
+
+  const mutation = useMutation({
+    mutationFn: createLecture,
+    onSuccess: (data) => {
+      navigate('/chat', { ...state, selectedTopics, lecture: data });
+    },
+    // onError: () => {},
+  });
+
+  const startChat = async () => {
+    const topic = selectedTopics[0];
+    mutation.mutate({ subject, topic });
+  };
 
   return (
     <Container>
@@ -86,15 +104,14 @@ const SelectTopic = () => {
         </Sheet>
       </div>
       <ActionButtons>
-        <Link
+        <Button
           fullWidth
           variant="contained"
-          to="/chat"
-          state={{ ...state, selectedTopics }}
-          disabled={!selectedTopics.length}
+          disabled={!selectedTopics.length || mutation.isPending}
+          onClick={startChat}
         >
           Start Chat
-        </Link>
+        </Button>
       </ActionButtons>
     </Container>
   );
