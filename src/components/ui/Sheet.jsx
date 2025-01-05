@@ -13,7 +13,6 @@ const Container = styled.div`
   box-sizing: border-box;
   padding: 24px;
   display: inline-block;
-
   width: ${({ $isFullWidth }) => ($isFullWidth ? '100%' : 'auto')};
   box-shadow: ${({ $shadowDepth }) => shadowDepths[$shadowDepth]};
 `;
@@ -23,12 +22,14 @@ const Sheet = ({
   shadowDepth = 'default',
   onClick,
   children,
+  ...rest
 }) => {
   return (
     <Container
       $isFullWidth={isFullWidth}
       $shadowDepth={shadowDepth}
       onClick={onClick}
+      {...rest}
     >
       {children}
     </Container>

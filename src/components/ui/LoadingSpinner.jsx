@@ -18,6 +18,7 @@ const Container = styled.div`
           top: 0;
           left: 0;
           background-color: #fff;
+          z-index: 100;
         `
       : ''}
 `;
@@ -34,18 +35,19 @@ const StyledLottie = styled(Lottie)`
   height: ${({ $size }) => spinnerSizes[$size]};
 
   path {
-    fill: ${({ theme }) => theme.palette.primary.main};
+    fill: ${({ theme, $color }) => $color || theme.palette.primary.main};
   }
 `;
 
-const LoadingSpinner = ({ size = 'md', isFullScreen }) => {
+const LoadingSpinner = ({ size = 'md', isFullScreen, color }) => {
   return (
-    <Container $isFullScreen={isFullScreen}>
+    <Container className="loading-spinner" $isFullScreen={isFullScreen}>
       <StyledLottie
         animationData={loadingAnimation}
         loop={true}
         autoplay={true}
         $size={size}
+        $color={color}
       />
     </Container>
   );

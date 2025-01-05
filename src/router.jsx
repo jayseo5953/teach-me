@@ -4,10 +4,10 @@ import Link from '@/components/ui/Link';
 // import ProtectedRoute from '@/layouts/ProtectedRoute';
 import Root from '@/pages/Root';
 import Dashboard from '@/pages/Dashboard';
-import SelectStudent from '@/pages/PreChat/SelectStudent';
 import SelectTopic from '@/pages/PreChat/SelectTopic';
 import Chat from '@/pages/Chat/Chat';
 import ChatSummary from './pages/PostChat/ChatSummary';
+import HideParentRoute from './layouts/HideParentRoute';
 
 const router = createBrowserRouter([
   {
@@ -18,18 +18,30 @@ const router = createBrowserRouter([
 
       {
         path: 'pre-chat',
-        element: <SelectStudent />,
+        element: (
+          <HideParentRoute
+            matchPath={'/pre-chat'}
+            PageComponent={<SelectTopic />}
+          />
+        ),
+      },
+      {
+        path: 'chat',
+        element: (
+          <HideParentRoute matchPath={'/chat'} PageComponent={<Chat />} />
+        ),
         children: [
           {
-            path: 'select-topic',
-            element: <SelectTopic />,
+            path: 'post-chat',
+            element: (
+              <HideParentRoute
+                matchPath={'/chat/post-chat'}
+                PageComponent={<ChatSummary />}
+              />
+            ),
           },
         ],
       },
-
-      { path: 'chat', element: <Chat /> },
-      { path: 'post-chat', element: <ChatSummary /> },
-
       // {
       //   element: <ProtectedRoute />,
       //   children: [

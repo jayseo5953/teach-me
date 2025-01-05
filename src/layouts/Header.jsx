@@ -3,49 +3,41 @@ import { useLocation, Link } from 'react-router-dom';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 const StyledHeader = styled.header`
-  height: 25px;
-  padding: 16px;
-  width: calc(100vw - 32px);
+  height: ${({ theme }) => theme.sizes.headerHeight};
+  padding: 24px;
+  width: 100vw;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: relative;
+  box-sizing: border-box;
 `;
 
-const Left = styled(Link)`
+const Left = styled.div`
   flex: 0 0 auto;
 `;
 
-const Right = styled(Link)`
+const Right = styled.div`
   flex: 0 0 auto;
 `;
 
-const Title = styled.div`
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  white-space: nowrap;
-`;
+const routesToHideBackButtons = ['/chat', '/chat/post-chat'];
 
 const Header = () => {
-  // const { user, logout } = useAuth();
-
   const location = useLocation();
-
   const isRoot = location.pathname === '/';
   const parentPath = location.pathname.split('/').slice(0, -1).join('/') || '/';
-
+  const hideBackButton =
+    isRoot || routesToHideBackButtons.includes(location.pathname);
   return (
     <StyledHeader>
       <Left>
-        {!isRoot && (
-          <Link to={parentPath} relative="path">
+        {!hideBackButton && (
+          <Link to={parentPath} state={location.state} relative="path">
             <ChevronLeftIcon color="primary" />
           </Link>
         )}
       </Left>
-      <Title>{location.pathname}</Title>
       <Right />
     </StyledHeader>
   );

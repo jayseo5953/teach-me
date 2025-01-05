@@ -27,12 +27,23 @@ const theme = createTheme({
     xl: '1630px',
   },
 
+  sizes: { headerHeight: ' 57px', fullHeight: 'calc(100vh - 57px)' },
+
   /**
    * Once brand is determined, use colors from here
    * https://mui.com/material-ui/customization/color/#color-palette
    * */
   palette: {
     background: '#F5F5F8',
+    chatBubbles: {
+      textColor: 'rgba(60, 60, 67, 1)',
+      receiver: {
+        backgroundColor: '#FFEA80',
+      },
+      sender: {
+        backgroundColor: '#E1E8F0',
+      },
+    },
     primary: {
       main: '#28ABC7',
       light: '#61D5F2',
@@ -198,5 +209,4 @@ const theme = createTheme({
   },
 });
 
-console.log(theme);
 export default theme;
