@@ -4,10 +4,10 @@ import { useStudent } from '../contexts/StudentContext';
 
 const PrivateRoute = () => {
   const { user } = useAuth();
-  const { student } = useStudent();
+  const { studentContext } = useStudent();
 
   if (!user) return <Navigate to="/login" />;
-  if (!student) return <Navigate to="/select-student" />;
+  if (!studentContext) return <Navigate to="/select-student" />;
   return <Outlet />;
 };
 

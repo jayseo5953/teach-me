@@ -1,8 +1,4 @@
 import { useContext, createContext, useState } from 'react';
-import bannett from '../../public/assets/bannett.png';
-import adrian from '../../public/assets/adrian.png';
-import elliott from '../../public/assets/elliott.png';
-import harper from '../../public/assets/harper.png';
 import { getStudents as getStudentsApiCall } from '@/services/api/students';
 
 const StudentContext = createContext();
@@ -18,8 +14,9 @@ const StudentProvider = ({ children }) => {
     getStudentFromLocalStorage()
   );
 
-  const setStudent = async (student) => {
-    setStudentContext({ ...student });
+  const setStudent = (student) => {
+    localStorage.removeItem(STUDENT_KEY);
+    setStudentContext(student);
   };
 
   const getStudents = async () => {

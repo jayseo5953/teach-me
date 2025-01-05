@@ -1,15 +1,13 @@
 import api from '@/services/api/client';
 
 const END_POINT = '/api/lectures';
-const user = '677a1f33be4c699c3bc402b9';
-const student = '677a1f33be4c699c3bc402bb';
 
-export async function createLecture({ subject, topic }) {
+export async function createLecture({ subject, topic, studentId, userId }) {
   const response = await api.post(END_POINT, {
     subject,
     topic,
-    user,
-    student,
+    user: userId,
+    student: studentId,
   });
   return response.data;
 }

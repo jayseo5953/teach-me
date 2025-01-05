@@ -1,24 +1,63 @@
-import styled from 'styled-components';
-/* Rectangle 1 */
+import { Typography } from '@mui/material';
 
-const StyledDiv = styled.div`
-  box-sizing: border-box;
-
-  width: 100%;
-  height: 277px;
-
-  background: #ffffff;
-  border: 0.33px solid rgba(0, 0, 0, 0.4);
-  border-radius: 24px;
-
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 1;
-`;
-
-const StudentCard = ({ student }) => {
-  return <StyledDiv>123123123123123</StyledDiv>;
+const StudentCard = ({ student, handleSelect, isSelected }) => {
+  return (
+    <div
+      style={{
+        backgroundColor: '#ffffff',
+        border: isSelected
+          ? '3px solid rgba(0, 0, 0)'
+          : '0.33px solid rgba(0, 0, 0, 0.4)',
+        borderRadius: '24px',
+        width: '100%',
+        height: '277px',
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'column',
+      }}
+      onClick={handleSelect}
+    >
+      <div
+        style={{
+          padding: '12px',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <img
+          src={student.image}
+          style={{
+            width: '100%',
+            objectFit: 'contain',
+            borderTopLeftRadius: '16px',
+            borderTopRightRadius: '16px',
+          }}
+        />
+        <Typography
+          variant="body3"
+          color="#3C3C4399"
+          sx={{
+            marginBottom: '4px',
+            marginTop: '8px',
+          }}
+        >
+          {student.characteristic}
+        </Typography>
+        <Typography variant="h3">{student.name}</Typography>
+        <div
+          style={{
+            height: 1,
+            backgroundColor: '#54545657',
+            marginTop: '8px',
+            marginBottom: '8px',
+          }}
+        />
+        <Typography variant="caption1" color="#00000080">
+          {student.role}
+        </Typography>
+      </div>
+    </div>
+  );
 };
 
 export default StudentCard;
