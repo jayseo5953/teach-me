@@ -2,12 +2,13 @@ import ChatInput from '@/components/ui/Chat/ChatInput';
 import ChatRow from '@/components/ui/Chat/ChatRow';
 import Link from '@/components/ui/Link';
 import { getLectureMessages } from '@/services/api/lectures';
-
+import LinearProgress from '@mui/material/LinearProgress';
 import socket from '@/services/webSocket/client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-// import { useLocation } from 'react-router-dom';
+import { Box, IconButton, Typography } from '@mui/material';
+import { ArrowDownward } from '@mui/icons-material';
 
 const ChatWrapper = styled.div`
   display: flex;
@@ -38,10 +39,51 @@ const Header = styled.header`
   box-sizing: border-box;
 `;
 
+const ScrollToBottomButton = styled(IconButton)`
+  position: fixed;
+  bottom: 85px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+
+  &,
+  &:hover {
+    background-color: ${({ theme }) => theme.palette.primary.main};
+  }
+`;
+
 const Chat = () => {
   const { state } = useLocation();
-
   const [incomingMessages, setIncomingMessages] = useState([]);
+  const [satisfactionCount, setSatisfactionCount] = useState(0);
+  const bottomRef = useRef(null);
+  const containerRef = useRef(null);
+  const [isScrolledUp, setIsScrolledUp] = useState(false);
+
+  // Check if the user scrolled up
+  const handleScroll = () => {
+    const container = containerRef.current;
+    if (container) {
+      setIsScrolledUp(
+        container.scrollHeight - container.scrollTop >
+          container.clientHeight + 200
+      );
+    }
+  };
+
+  const scrollToBottom = () => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    const container = containerRef.current;
+    container?.addEventListener('scroll', handleScroll);
+    return () => container?.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [incomingMessages]);
 
   useEffect(() => {
     (async function () {
@@ -56,7 +98,10 @@ const Chat = () => {
 
     // Event Listener for Incoming Messages
     socket.on('messageAck', (data) => {
-      const { message } = data;
+      const { message, isSatisfactory } = data;
+      if (isSatisfactory) {
+        setSatisfactionCount((prev) => prev + 1);
+      }
       setIncomingMessages((prev) => [...prev, message]);
     });
 
@@ -82,9 +127,18 @@ const Chat = () => {
     }
   };
 
+  const progress = (satisfactionCount / state.selectedTopics.length) * 100;
+
   return (
-    <ChatWrapper>
+    <ChatWrapper ref={containerRef}>
       <Header>
+        <Box sx={{ flex: 1, marginRight: '20px', marginTop: '-10px' }}>
+          <Typography variant="caption" color="primary">
+            Progress
+          </Typography>
+          <LinearProgress variant="determinate" value={progress} />
+        </Box>
+
         <Link to="post-chat">End Chat</Link>
       </Header>
 
@@ -96,7 +150,12 @@ const Chat = () => {
           message={message.content}
         />
       ))}
-
+      {isScrolledUp && (
+        <ScrollToBottomButton onClick={() => scrollToBottom()}>
+          <ArrowDownward />
+        </ScrollToBottomButton>
+      )}
+      <div ref={bottomRef} />
       <ChatInputWrapper>
         <ChatInput fullWidth onSubmit={sendMessage} clearOnSubmit />
       </ChatInputWrapper>

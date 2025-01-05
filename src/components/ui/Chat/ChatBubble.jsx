@@ -4,7 +4,6 @@ import styled from 'styled-components';
 // Chat Bubble Styles
 const ChatBubbleContainer = styled(Box)`
   position: relative;
-  max-width: 75%;
   padding: 8px 12px;
   margin-left: 16px;
   border-radius: 12px;
@@ -13,6 +12,8 @@ const ChatBubbleContainer = styled(Box)`
     $isSender
       ? theme.palette.chatBubbles.sender.backgroundColor
       : theme.palette.chatBubbles.receiver.backgroundColor};
+
+  right: ${({ $isSender }) => ($isSender ? '8px' : '')};
 
   /* Tail Styling */
   &::after {
@@ -34,13 +35,11 @@ const ChatBubbleContainer = styled(Box)`
 `;
 
 // Chat Bubble Component
-function ChatBubble({ message, isSender = false, className }) {
+function ChatBubble({ message, isSender = false }) {
   return (
-    <Box className={className}>
-      <ChatBubbleContainer $isSender={isSender}>
-        <Typography variant="body2">{message}</Typography>
-      </ChatBubbleContainer>
-    </Box>
+    <ChatBubbleContainer $isSender={isSender}>
+      <Typography variant="body2">{message}</Typography>
+    </ChatBubbleContainer>
   );
 }
 
