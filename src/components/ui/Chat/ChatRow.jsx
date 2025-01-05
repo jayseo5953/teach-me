@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Avatar from '@/components/ui/Chat/Avatar';
 import ChatBubble from './ChatBubble';
+import { useStudent } from '@/contexts/StudentContext';
 
 const ChatRowContainer = styled.div`
   display: flex;
@@ -14,13 +15,9 @@ const StyledAvatar = styled(Avatar)`
   ${({ variant }) => variant === 'square' && 'border-radius: 16px;'}
 `;
 
-const ChatRow = ({
-  avatarSrc = '/assets/student.png',
-  avatarSize,
-  avatarVariant,
-  isSender,
-  message,
-}) => {
+const ChatRow = ({ avatarSize, avatarVariant, isSender, message }) => {
+  const { studentContext } = useStudent();
+  const avatarSrc = studentContext?.image;
   return (
     <ChatRowContainer $isSender={isSender}>
       {!isSender && (

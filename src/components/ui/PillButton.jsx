@@ -14,8 +14,12 @@ const StyledPillButton = styled(Button)`
   border: 1px solid
     ${({ selected, theme }) =>
       selected ? theme.palette.primary.dark : theme.palette.grey[400]};
-  background-color: ${({ selected, theme }) =>
-    selected ? theme.palette.primary.dark : 'transparent'};
+  background-color: ${({ selected, theme, white }) =>
+    selected
+      ? theme.palette.primary.dark
+      : white
+      ? theme.palette.common.white
+      : 'transparent'};
   color: ${({ selected, theme }) =>
     selected ? theme.palette.common.white : theme.palette.text.primary};
   transition: background-color 0.3s ease, border-color 0.3s ease;
@@ -26,12 +30,13 @@ const StyledPillButton = styled(Button)`
   }
 `;
 
-function PillButton({ label, selected, onClick }) {
+function PillButton({ label, selected, onClick, white }) {
   return (
     <StyledPillButton
       variant={selected ? 'contained' : 'outlined'}
       selected={selected}
       onClick={() => onClick(label)}
+      white
     >
       {selected && <CheckCircleIcon fontSize="small" />} {label}
     </StyledPillButton>
