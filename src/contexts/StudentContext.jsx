@@ -15,8 +15,8 @@ const StudentProvider = ({ children }) => {
   );
 
   const setStudent = (student) => {
-    localStorage.removeItem(STUDENT_KEY);
     setStudentContext(student);
+    localStorage.setItem(STUDENT_KEY, JSON.stringify(student));
   };
 
   const getStudents = async () => {
