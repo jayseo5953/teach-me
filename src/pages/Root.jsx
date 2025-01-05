@@ -1,8 +1,19 @@
 import Header from '@/layouts/Header';
 import Main from '@/layouts/Main';
-import { Outlet } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 function Root() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { pathname } = location;
+
+  useEffect(() => {
+    if (pathname === '/') {
+      navigate('/dashboard');
+    }
+  }, []);
+
   return (
     <>
       <Header />
