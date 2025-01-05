@@ -4,8 +4,10 @@ import ChatBubble from './ChatBubble';
 
 const ChatRowContainer = styled.div`
   display: flex;
+  justify-content: ${(props) => (props.$isSender ? 'flex-end' : 'flex-start')};
   margin: 16px 0;
   align-self: ${(props) => (props.$isSender ? 'flex-end' : 'flex-start')};
+  max-width: 80%;
 `;
 
 const StyledAvatar = styled(Avatar)`

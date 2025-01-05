@@ -2,12 +2,12 @@ import ChatInput from '@/components/ui/Chat/ChatInput';
 import ChatRow from '@/components/ui/Chat/ChatRow';
 import Link from '@/components/ui/Link';
 import { getLectureMessages } from '@/services/api/lectures';
-
+import LinearProgress from '@mui/material/LinearProgress';
 import socket from '@/services/webSocket/client';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-// import { useLocation } from 'react-router-dom';
+import { Box, Typography } from '@mui/material';
 
 const ChatWrapper = styled.div`
   display: flex;
@@ -40,8 +40,8 @@ const Header = styled.header`
 
 const Chat = () => {
   const { state } = useLocation();
-
   const [incomingMessages, setIncomingMessages] = useState([]);
+  const [satisfactionCount, setSatisfactionCount] = useState(0);
 
   useEffect(() => {
     (async function () {
@@ -56,7 +56,10 @@ const Chat = () => {
 
     // Event Listener for Incoming Messages
     socket.on('messageAck', (data) => {
-      const { message } = data;
+      const { message, isSatisfactory } = data;
+      if (isSatisfactory) {
+        setSatisfactionCount((prev) => prev + 1);
+      }
       setIncomingMessages((prev) => [...prev, message]);
     });
 
@@ -76,15 +79,24 @@ const Chat = () => {
     if (message.trim()) {
       const payload = {
         content: message,
-        lecture: state.lecture.id
-      }
+        lecture: state.lecture.id,
+      };
       socket.emit('messageSubmitted', payload);
     }
   };
 
+  const progress = (satisfactionCount / state.selectedTopics.length) * 100;
+
   return (
     <ChatWrapper>
       <Header>
+        <Box sx={{ flex: 1, marginRight: '20px', marginTop: '-10px' }}>
+          <Typography variant="caption" color="primary">
+            Progress
+          </Typography>
+          <LinearProgress variant="determinate" value={progress} />
+        </Box>
+
         <Link to="post-chat">End Chat</Link>
       </Header>
 
