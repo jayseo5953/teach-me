@@ -11,6 +11,7 @@ import { Box, Chip, IconButton, Typography } from '@mui/material';
 import { ArrowDownward, CheckCircle } from '@mui/icons-material';
 import Divider from '@mui/material/Divider';
 import { useAuth } from '@/contexts/AuthContext';
+import { useStudent } from '@/contexts/StudentContext';
 
 const headerHeight = '200px';
 
@@ -71,6 +72,7 @@ const Chat = () => {
   const { state } = useLocation();
   const { selectedTopics, lecture, subject } = state || {};
   const [incomingMessages, setIncomingMessages] = useState([]);
+  const [lectures, setLectures] = useState([lecture]);
   const [satisfactionCount, setSatisfactionCount] = useState(0);
   const [isScrolledUp, setIsScrolledUp] = useState(false);
   const [currentLecture, setCurrentLecture] = useState(lecture);
@@ -78,6 +80,7 @@ const Chat = () => {
   const [isFinished, setIsFinished] = useState(false);
   const [socket, setSocket] = useState(null);
   const { user } = useAuth();
+  const { studentContext } = useStudent();
 
   /* Refs */
   const bottomRef = useRef(null);
@@ -154,9 +157,12 @@ const Chat = () => {
           const lecture = await createLecture({
             subject,
             topic: remainingTopics[1],
+            userId: user?.id,
+            studentId: studentContext?.id,
           });
 
           setCurrentLecture(lecture);
+          setLectures([...lectures, lecture]);
           setSatisfactionCount(0);
           setRemainingTopics((prev) =>
             prev.filter((topic) => topic !== currentTopic)
@@ -182,12 +188,11 @@ const Chat = () => {
     };
   }, [remainingTopics, lecture, satisfactionCount, user]);
 
-  console.log(remainingTopics);
   return (
     <ChatWrapper ref={containerRef}>
       <Header>
         <Nav>
-          <Link to="post-chat">End Chat</Link>
+          <Link to="/">End Chat</Link>
         </Nav>
 
         <div>
@@ -258,7 +263,12 @@ const Chat = () => {
       <div ref={bottomRef} />
       <ChatInputWrapper>
         {isFinished ? (
-          <Link variant="contained" fullWidth to="post-chat">
+          <Link
+            variant="contained"
+            state={{ ...state, lectures }}
+            fullWidth
+            to="post-chat"
+          >
             Finish Chat
           </Link>
         ) : (
