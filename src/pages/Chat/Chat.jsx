@@ -1,9 +1,21 @@
 import ChatInput from '@/components/ui/Chat/ChatInput';
+import ChatRow from '@/components/ui/Chat/ChatRow';
 import Link from '@/components/ui/Link';
+import { getLectureMessages } from '@/services/api/lectures';
+
 import socket from '@/services/webSocket/client';
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 // import { useLocation } from 'react-router-dom';
+
+const ChatWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - ${({ theme }) => theme.sizes.headerHeight} - 96px);
+  overflow: scroll;
+  margin-top: ${({ theme }) => theme.sizes.headerHeight};
+`;
 
 const ChatInputWrapper = styled.div`
   position: fixed;
@@ -12,11 +24,31 @@ const ChatInputWrapper = styled.div`
   bottom: 0;
 `;
 
-const Chat = () => {
-  //   const { state } = useLocation();
+const Header = styled.header`
+  height: ${({ theme }) => theme.sizes.headerHeight};
+  padding: 24px 0;
 
-  const [message, setMessage] = useState('');
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 24px;
+  right: 24px;
+  box-sizing: border-box;
+`;
+
+const Chat = () => {
+  const { state } = useLocation();
+
   const [incomingMessages, setIncomingMessages] = useState([]);
+
+  useEffect(() => {
+    (async function () {
+      const messages = await getLectureMessages(state.lecture.id);
+      setIncomingMessages(messages);
+    })();
+  }, [state.lecture.id]);
 
   useEffect(() => {
     // Connect to WebSocket
@@ -39,23 +71,31 @@ const Chat = () => {
     };
   }, []);
 
-  const sendMessage = () => {
+  const sendMessage = (message) => {
     if (message.trim()) {
       socket.emit('message', message);
-      setMessage('');
     }
   };
 
   return (
-    <div>
-      Chat
-      <div>
-        <Link to="post-chat">Finish Chat</Link>
-      </div>
+    <ChatWrapper>
+      <Header>
+        <Link to="post-chat">End Chat</Link>
+      </Header>
+
+      {incomingMessages.map((message) => (
+        <ChatRow
+          key={message.id}
+          avatarSize="xs"
+          isSender={message.sender !== 'STUDENT'}
+          message={message.content}
+        />
+      ))}
+
       <ChatInputWrapper>
-        <ChatInput fullWidth />
+        <ChatInput fullWidth onSubmit={sendMessage} clearOnSubmit />
       </ChatInputWrapper>
-    </div>
+    </ChatWrapper>
   );
 };
 

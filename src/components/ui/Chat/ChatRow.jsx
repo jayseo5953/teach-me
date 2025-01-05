@@ -4,8 +4,8 @@ import ChatBubble from './ChatBubble';
 
 const ChatRowContainer = styled.div`
   display: flex;
-
   margin: 16px 0;
+  align-self: ${(props) => (props.$isSender ? 'flex-end' : 'flex-start')};
 `;
 
 const StyledAvatar = styled(Avatar)`
@@ -20,9 +20,15 @@ const ChatRow = ({
   message,
 }) => {
   return (
-    <ChatRowContainer>
-      <StyledAvatar src={avatarSrc} size={avatarSize} variant={avatarVariant} />
-      <ChatBubble sender={isSender} message={message} />
+    <ChatRowContainer $isSender={isSender}>
+      {!isSender && (
+        <StyledAvatar
+          src={avatarSrc}
+          size={avatarSize}
+          variant={avatarVariant}
+        />
+      )}
+      <ChatBubble isSender={isSender} message={message} />
     </ChatRowContainer>
   );
 };

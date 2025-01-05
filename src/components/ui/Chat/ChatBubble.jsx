@@ -13,7 +13,6 @@ const ChatBubbleContainer = styled(Box)`
     $isSender
       ? theme.palette.chatBubbles.sender.backgroundColor
       : theme.palette.chatBubbles.receiver.backgroundColor};
-  align-self: ${(props) => (props.sender ? 'flex-end' : 'flex-start')};
 
   /* Tail Styling */
   &::after {
@@ -35,14 +34,9 @@ const ChatBubbleContainer = styled(Box)`
 `;
 
 // Chat Bubble Component
-function ChatBubble({ message, isSender = false }) {
+function ChatBubble({ message, isSender = false, className }) {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: isSender ? 'flex-end' : 'flex-start',
-      }}
-    >
+    <Box className={className}>
       <ChatBubbleContainer $isSender={isSender}>
         <Typography variant="body2">{message}</Typography>
       </ChatBubbleContainer>

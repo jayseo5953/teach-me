@@ -13,3 +13,8 @@ export async function createLecture({ subject, topic }) {
   });
   return response.data;
 }
+
+export async function getLectureMessages(lectureId) {
+  const response = await api.get(`api/messages/${lectureId}`);
+  return response.data;
+}
