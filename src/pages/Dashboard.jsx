@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import ChatRow from '@/components/ui/Chat/ChatRow';
 import { useMutation } from '@tanstack/react-query';
 import { generateTopics } from '@/services/api/topics';
+import { useState } from 'react';
 
 const Title = styled.div`
   margin-bottom: 32px;
@@ -20,13 +21,16 @@ const Container = styled.div`
   top: -50px;
 `;
 const ChatRowWrapper = styled.div`
-  margin-bottom: 96px;
+  height: 130px;
+  margin-bottom: 60px;
 `;
 
 function Dashboard() {
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleSubjectSelect = (subjectText) => {
+    setError(null);
     mutation.mutate(subjectText);
   };
 
@@ -35,9 +39,9 @@ function Dashboard() {
     onSuccess: (data) => {
       navigate('/pre-chat', { state: data });
     },
-    // onError: (error) => {
-    //   console.error('Error creating user:', error);
-    // },
+    onError: () => {
+      setError('Invalid subject. Please try again with a different subject.');
+    },
   });
 
   return (
@@ -53,6 +57,22 @@ function Dashboard() {
           maxLength={80}
           isLoading={mutation.isPending}
         />
+        {error && (
+          <div>
+            <Typography
+              variant="caption2"
+              color="error"
+              textAlign="center"
+              sx={{
+                display: 'inline-block',
+                marginLeft: '15px',
+                marginTop: '15px',
+              }}
+            >
+              {error}
+            </Typography>
+          </div>
+        )}
       </ChatRowWrapper>
       <ChatRow
         avatarSize="md"

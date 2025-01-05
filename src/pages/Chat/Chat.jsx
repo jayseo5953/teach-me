@@ -1,8 +1,8 @@
 import Link from '@/components/ui/Link';
-import { useLocation } from 'react-router-dom';
+// import { useLocation } from 'react-router-dom';
 
 const Chat = () => {
-  const { state } = useLocation();
+  //   const { state } = useLocation();
 
   return (
     <div>

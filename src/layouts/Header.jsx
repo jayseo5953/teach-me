@@ -4,7 +4,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 const StyledHeader = styled.header`
   height: ${({ theme }) => theme.sizes.headerHeight};
-  padding: 16px;
+  padding: 24px;
   width: 100vw;
   display: flex;
   justify-content: space-between;

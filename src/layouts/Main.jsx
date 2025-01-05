@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const StyledMain = styled.main`
-  padding: 0 16px;
+  padding: 0 24px;
 `;
 
 const Main = ({ children }) => {
