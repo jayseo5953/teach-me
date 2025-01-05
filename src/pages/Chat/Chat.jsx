@@ -9,10 +9,10 @@ import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { Box, Chip, IconButton, Typography } from '@mui/material';
 import { ArrowDownward, CheckCircle } from '@mui/icons-material';
-import Divider from '@mui/material/Divider';
+
 import { useAuth } from '@/contexts/AuthContext';
 
-const headerHeight = '200px';
+const headerHeight = '170px';
 
 const ChatWrapper = styled.div`
   display: flex;
@@ -20,6 +20,7 @@ const ChatWrapper = styled.div`
   height: calc(100vh - ${headerHeight} - 96px);
   overflow: scroll;
   margin-top: ${headerHeight};
+  padding-top: 8px;
 `;
 
 const ChatInputWrapper = styled.div`
@@ -31,8 +32,8 @@ const ChatInputWrapper = styled.div`
 
 const Header = styled.header`
   height: ${headerHeight};
-  padding: 24px 0;
-
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
   left: 24px;
@@ -182,12 +183,11 @@ const Chat = () => {
     };
   }, [remainingTopics, lecture, satisfactionCount, user]);
 
-  console.log(remainingTopics);
   return (
     <ChatWrapper ref={containerRef}>
       <Header>
         <Nav>
-          <Link to="post-chat">End Chat</Link>
+          <Link to="/">End Chat</Link>
         </Nav>
 
         <div>
@@ -239,7 +239,6 @@ const Chat = () => {
           <br />
           <Typography variant="h3">Topic: {currentTopic}</Typography>
         </div>
-        <Divider />
       </Header>
 
       {incomingMessages.map((message) => (
@@ -262,7 +261,14 @@ const Chat = () => {
             Finish Chat
           </Link>
         ) : (
-          <ChatInput rows={1} fullWidth onSubmit={sendMessage} clearOnSubmit />
+          <ChatInput
+            minRows={1}
+            maxRows={5}
+            rows={null}
+            fullWidth
+            onSubmit={sendMessage}
+            clearOnSubmit
+          />
         )}
       </ChatInputWrapper>
     </ChatWrapper>

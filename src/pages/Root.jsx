@@ -12,7 +12,7 @@ function Root() {
     if (pathname === '/') {
       navigate('/dashboard');
     }
-  }, []);
+  }, [navigate, pathname]);
 
   return (
     <>
