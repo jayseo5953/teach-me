@@ -28,7 +28,6 @@ const StyledTextField = styled(TextField)`
 
 const StyledAdornment = styled(InputAdornment)`
   && {
-    height: 72px;
     max-height: unset;
     align-items: end;
     width: 40px;
@@ -73,7 +72,9 @@ const ChatInput = ({
   placeholder,
   isLoading,
   clearOnSubmit = false,
+  rows = 3,
   rest,
+  className,
 }) => {
   const [text, setText] = useState('');
 
@@ -85,14 +86,18 @@ const ChatInput = ({
     }
   };
   return (
-    <StyledSheet shadowDepth="soft" isFullWidth={fullWidth}>
+    <StyledSheet
+      shadowDepth="soft"
+      isFullWidth={fullWidth}
+      className={className}
+    >
       <form onSubmit={handleSubmit}>
         <StyledTextField
           name="input"
           fullWidth={fullWidth}
           multiline
           type="submit"
-          rows={3}
+          rows={rows}
           value={text}
           disabled={isLoading}
           onChange={(e) => setText(e.target.value)}

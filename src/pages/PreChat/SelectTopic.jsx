@@ -36,6 +36,8 @@ const ViewMoreButton = styled(Button)`
   padding: 0;
 `;
 
+const maxTopicNumbers = 3;
+
 const SelectTopic = () => {
   const [selectedTopics, setSelectedTopcis] = useState([]);
   const [shouldShowRest, setShouldShowRest] = useState(false);
@@ -47,13 +49,16 @@ const SelectTopic = () => {
   const { user } = useAuth();
 
   const handleSelectTopic = (topic) => {
-    const set = new Set(selectedTopics);
-    if (set.has(topic)) {
-      set.delete(topic);
+    let topicToSet = [...selectedTopics];
+    if (topicToSet.includes(topic)) {
+      topicToSet = topicToSet.filter((t) => t !== topic);
     } else {
-      set.add(topic);
+      if (topicToSet.length >= maxTopicNumbers) {
+        topicToSet = topicToSet.slice(1);
+      }
+      topicToSet = [...topicToSet, topic];
     }
-    setSelectedTopcis([...set]);
+    setSelectedTopcis(topicToSet);
   };
   const topicsToShow = shouldShowRest ? topics : topics.slice(0, 9);
 
