@@ -3,10 +3,9 @@ import { Typography } from '@mui/material';
 
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import ChatRow from '@/components/ui/Chat/ChatRow';
 import { useMutation } from '@tanstack/react-query';
 import { generateTopics } from '@/services/api/topics';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useStudent } from '../contexts/StudentContext';
 import PillButton from '../components/ui/PillButton';
 import ChatBubble from '../components/ui/Chat/ChatBubble';
@@ -43,6 +42,12 @@ function Dashboard() {
     setError(null);
     mutation.mutate({ subjectText, studentId: studentContext?.id });
   };
+
+  useEffect(() => {
+    if (!studentContext) {
+      navigate('/select-student');
+    }
+  }, [studentContext, navigate]);
 
   const mutation = useMutation({
     mutationFn: generateTopics,

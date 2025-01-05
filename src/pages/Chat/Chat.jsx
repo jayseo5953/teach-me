@@ -5,15 +5,16 @@ import { createLecture, getLectureMessages } from '@/services/api/lectures';
 import LinearProgress from '@mui/material/LinearProgress';
 import createSocket from '@/services/webSocket/client';
 import { useEffect, useState, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Box, Chip, IconButton, Typography } from '@mui/material';
 import { ArrowDownward, CheckCircle } from '@mui/icons-material';
-import Divider from '@mui/material/Divider';
 import { useAuth } from '@/contexts/AuthContext';
+import ConfirmationModal from '@/components/ConfirmationModal';
+import Button from '@/components/ui/Button';
 import { useStudent } from '@/contexts/StudentContext';
 
-const headerHeight = '200px';
+const headerHeight = '170px';
 
 const ChatWrapper = styled.div`
   display: flex;
@@ -21,6 +22,7 @@ const ChatWrapper = styled.div`
   height: calc(100vh - ${headerHeight} - 96px);
   overflow: scroll;
   margin-top: ${headerHeight};
+  padding-top: 8px;
 `;
 
 const ChatInputWrapper = styled.div`
@@ -32,8 +34,8 @@ const ChatInputWrapper = styled.div`
 
 const Header = styled.header`
   height: ${headerHeight};
-  padding: 24px 0;
-
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
   left: 24px;
@@ -79,7 +81,9 @@ const Chat = () => {
   const [remainingTopics, setRemainingTopics] = useState(selectedTopics);
   const [isFinished, setIsFinished] = useState(false);
   const [socket, setSocket] = useState(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { studentContext } = useStudent();
 
   /* Refs */
@@ -157,8 +161,8 @@ const Chat = () => {
           const lecture = await createLecture({
             subject,
             topic: remainingTopics[1],
-            userId: user?.id,
-            studentId: studentContext?.id,
+            userId: user.id,
+            studentId: studentContext.id,
           });
 
           setCurrentLecture(lecture);
@@ -188,11 +192,25 @@ const Chat = () => {
     };
   }, [remainingTopics, lecture, satisfactionCount, user]);
 
+  const confirmationTexts = selectedTopics.map((topic) => ({
+    text: topic,
+    finished: !remainingTopics.includes(topic),
+  }));
+
   return (
     <ChatWrapper ref={containerRef}>
+      {showConfirmation && (
+        <ConfirmationModal
+          topics={confirmationTexts}
+          onCancel={() => setShowConfirmation(false)}
+          onConfirm={() => {
+            navigate('/');
+          }}
+        />
+      )}
       <Header>
         <Nav>
-          <Link to="/">End Chat</Link>
+          <Button onClick={() => setShowConfirmation(true)}>End Chat</Button>
         </Nav>
 
         <div>
@@ -244,7 +262,6 @@ const Chat = () => {
           <br />
           <Typography variant="h3">Topic: {currentTopic}</Typography>
         </div>
-        <Divider />
       </Header>
 
       {incomingMessages.map((message) => (
@@ -272,7 +289,14 @@ const Chat = () => {
             Finish Chat
           </Link>
         ) : (
-          <ChatInput rows={1} fullWidth onSubmit={sendMessage} clearOnSubmit />
+          <ChatInput
+            minRows={1}
+            maxRows={5}
+            rows={null}
+            fullWidth
+            onSubmit={sendMessage}
+            clearOnSubmit
+          />
         )}
       </ChatInputWrapper>
     </ChatWrapper>

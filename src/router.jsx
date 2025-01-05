@@ -25,6 +25,10 @@ const router = createBrowserRouter([
             element: <Dashboard />,
           },
           {
+            path: 'select-student',
+            element: <SelectStudent />,
+          },
+          {
             path: 'pre-chat',
             element: (
               <HideParentRoute
@@ -51,10 +55,6 @@ const router = createBrowserRouter([
             ],
           },
         ],
-      },
-      {
-        path: 'select-student',
-        element: <SelectStudent />,
       },
       {
         path: 'sign-up',

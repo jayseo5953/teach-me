@@ -73,6 +73,8 @@ const ChatInput = ({
   isLoading,
   clearOnSubmit = false,
   rows = 3,
+  minRows,
+  maxRows,
   rest,
   className,
 }) => {
@@ -98,6 +100,8 @@ const ChatInput = ({
           multiline
           type="submit"
           rows={rows}
+          minRows={minRows}
+          maxRows={maxRows}
           value={text}
           disabled={isLoading}
           onChange={(e) => setText(e.target.value)}
