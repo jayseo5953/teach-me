@@ -3,13 +3,14 @@ import { useLocation, Link } from 'react-router-dom';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 const StyledHeader = styled.header`
-  height: 25px;
+  height: ${({ theme }) => theme.sizes.headerHeight};
   padding: 16px;
-  width: calc(100vw - 32px);
+  width: 100vw;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: relative;
+  box-sizing: border-box;
 `;
 
 const Left = styled(Link)`

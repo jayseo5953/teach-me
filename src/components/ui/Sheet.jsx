@@ -23,12 +23,14 @@ const Sheet = ({
   shadowDepth = 'default',
   onClick,
   children,
+  ...rest
 }) => {
   return (
     <Container
       $isFullWidth={isFullWidth}
       $shadowDepth={shadowDepth}
       onClick={onClick}
+      {...rest}
     >
       {children}
     </Container>
