@@ -25,6 +25,12 @@ const ChatRowWrapper = styled.div`
   margin-bottom: 60px;
 `;
 
+const StyledChatInput = styled(ChatInput)`
+  & .MuiInputAdornment-root {
+    height: 72px;
+  }
+`;
+
 function Dashboard() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -50,7 +56,7 @@ function Dashboard() {
         <Typography variant="h1">What should we study today?</Typography>
       </Title>
       <ChatRowWrapper>
-        <ChatInput
+        <StyledChatInput
           fullWidth
           placeholder="Quick search the subject"
           onSubmit={handleSubjectSelect}

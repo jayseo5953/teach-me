@@ -37,9 +37,11 @@ const ChatBubbleContainer = styled(Box)`
 // Chat Bubble Component
 function ChatBubble({ message, isSender = false }) {
   return (
-    <ChatBubbleContainer $isSender={isSender}>
-      <Typography variant="body2">{message}</Typography>
-    </ChatBubbleContainer>
+    <Box>
+      <ChatBubbleContainer $isSender={isSender}>
+        <Typography variant="body2">{message}</Typography>
+      </ChatBubbleContainer>
+    </Box>
   );
 }
 
