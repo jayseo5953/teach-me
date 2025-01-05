@@ -56,7 +56,6 @@ const Chat = () => {
 
     // Event Listener for Incoming Messages
     socket.on('messageAck', (data) => {
-      console.log(data)
       const { message } = data;
       setIncomingMessages((prev) => [...prev, message]);
     });
