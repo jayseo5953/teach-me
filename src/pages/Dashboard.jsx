@@ -7,6 +7,9 @@ import ChatRow from '@/components/ui/Chat/ChatRow';
 import { useMutation } from '@tanstack/react-query';
 import { generateTopics } from '@/services/api/topics';
 import { useState } from 'react';
+import { useStudent } from '../contexts/StudentContext';
+import PillButton from '../components/ui/PillButton';
+import ChatBubble from '../components/ui/Chat/ChatBubble';
 
 const Title = styled.div`
   margin-bottom: 32px;
@@ -34,10 +37,11 @@ const StyledChatInput = styled(ChatInput)`
 function Dashboard() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { studentContext } = useStudent();
 
   const handleSubjectSelect = (subjectText) => {
     setError(null);
-    mutation.mutate(subjectText);
+    mutation.mutate({ subjectText, studentId: studentContext?.id });
   };
 
   const mutation = useMutation({
@@ -80,11 +84,48 @@ function Dashboard() {
           </div>
         )}
       </ChatRowWrapper>
-      <ChatRow
-        avatarSize="md"
-        avatarVariant="square"
-        message="Hi teacher. Let's study!"
-      />
+      <div
+        style={{
+          display: 'flex',
+          direction: 'row',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            direction: 'column',
+            position: 'relative',
+          }}
+        >
+          <img
+            src={studentContext?.image}
+            style={{
+              borderRadius: 999,
+              objectFit: 'contain',
+              height: '150px',
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <PillButton
+              label="Change"
+              white
+              onClick={() => navigate('/select-student')}
+            />
+          </div>
+        </div>
+        <div>
+          <ChatBubble message={'Hi! teacher.  Let’s study!'} />
+        </div>
+      </div>
     </Container>
   );
 }

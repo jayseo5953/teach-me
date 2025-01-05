@@ -9,6 +9,7 @@ import Chat from '@/pages/Chat/Chat';
 import ChatSummary from './pages/PostChat/ChatSummary';
 import HideParentRoute from './layouts/HideParentRoute';
 import SignUp from './pages/SignUp';
+import SelectStudent from './pages/SelectStudent';
 
 const router = createBrowserRouter([
   {
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
             ],
           },
         ],
+      },
+      {
+        path: 'select-student',
+        element: <SelectStudent />,
       },
       {
         path: 'sign-up',

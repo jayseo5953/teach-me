@@ -10,6 +10,8 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import Button from '@/components/ui/Button';
 import { createLecture } from '@/services/api/lectures';
 import { useMutation } from '@tanstack/react-query';
+import { useStudent } from '@/contexts/StudentContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 const ActionButtons = styled.div`
   display: flex;
@@ -43,6 +45,8 @@ const SelectTopic = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const { subject, topics } = state || {};
+  const { studentContext } = useStudent();
+  const { user } = useAuth();
 
   const handleSelectTopic = (topic) => {
     let topicToSet = [...selectedTopics];
@@ -68,7 +72,12 @@ const SelectTopic = () => {
 
   const startChat = async () => {
     const topic = selectedTopics[0];
-    mutation.mutate({ subject, topic });
+    mutation.mutate({
+      subject,
+      topic,
+      studentId: studentContext?.id,
+      userId: user?.id,
+    });
   };
 
   return (
