@@ -7,6 +7,7 @@ import Dashboard from '@/pages/Dashboard';
 import SelectTopic from '@/pages/PreChat/SelectTopic';
 import Chat from '@/pages/Chat/Chat';
 import ChatSummary from './pages/PostChat/ChatSummary';
+import HideParentRoute from './layouts/HideParentRoute';
 
 const router = createBrowserRouter([
   {
@@ -17,12 +18,30 @@ const router = createBrowserRouter([
 
       {
         path: 'pre-chat',
-        element: <SelectTopic />,
+        element: (
+          <HideParentRoute
+            matchPath={'/pre-chat'}
+            PageComponent={<SelectTopic />}
+          />
+        ),
       },
-
-      { path: 'chat', element: <Chat /> },
-      { path: 'post-chat', element: <ChatSummary /> },
-
+      {
+        path: 'chat',
+        element: (
+          <HideParentRoute matchPath={'/chat'} PageComponent={<Chat />} />
+        ),
+        children: [
+          {
+            path: 'post-chat',
+            element: (
+              <HideParentRoute
+                matchPath={'/chat/post-chat'}
+                PageComponent={<ChatSummary />}
+              />
+            ),
+          },
+        ],
+      },
       // {
       //   element: <ProtectedRoute />,
       //   children: [

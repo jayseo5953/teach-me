@@ -1,9 +1,10 @@
 import { TextField } from '@mui/material';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { InputAdornment, IconButton } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import Sheet from '../Sheet';
 import { useState } from 'react';
+import LoadingSpinner from '../LoadingSpinner';
 
 const StyledSheet = styled(Sheet)`
   && {
@@ -47,10 +48,21 @@ const StyledIconButton = styled(IconButton)`
   &.Mui-disabled {
     color: #fff;
   }
-
   &.Mui-disabled {
     opacity: 0.5;
   }
+
+  ${({ $isLoading }) =>
+    $isLoading &&
+    css`
+      && {
+        padding: 0;
+        opacity: 1;
+        .loading-spinner {
+          transform: scale(1.5);
+        }
+      }
+    `}
 `;
 
 const ChatInput = ({
@@ -59,6 +71,7 @@ const ChatInput = ({
   fullWidth,
   maxLength,
   placeholder,
+  isLoading,
   rest,
 }) => {
   const [text, setText] = useState('');
@@ -76,6 +89,7 @@ const ChatInput = ({
           multiline
           type="submit"
           rows={3}
+          disabled={isLoading}
           onChange={(e) => setText(e.target.value)}
           inputProps={{
             maxLength,
@@ -83,9 +97,18 @@ const ChatInput = ({
           InputProps={{
             placeholder,
             endAdornment: withSubmitButton ? (
-              <StyledAdornment>
-                <StyledIconButton type="submit" edge="end" disabled={!text}>
-                  <ArrowUpwardIcon />
+              <StyledAdornment position="end">
+                <StyledIconButton
+                  type="submit"
+                  edge="end"
+                  disabled={!text}
+                  $isLoading={isLoading}
+                >
+                  {isLoading ? (
+                    <LoadingSpinner color={'#fff'} />
+                  ) : (
+                    <ArrowUpwardIcon />
+                  )}
                 </StyledIconButton>
               </StyledAdornment>
             ) : null,

@@ -4,6 +4,8 @@ import { Typography } from '@mui/material';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import ChatRow from '@/components/ui/Chat/ChatRow';
+import { useMutation } from '@tanstack/react-query';
+import { generateTopics } from '@/services/api/topics';
 
 const Title = styled.div`
   margin-bottom: 32px;
@@ -23,9 +25,21 @@ const ChatRowWrapper = styled.div`
 
 function Dashboard() {
   const navigate = useNavigate();
-  const handleSubjectSelect = (subject) => {
-    navigate('/pre-chat', { state: { subject } });
+
+  const handleSubjectSelect = (subjectText) => {
+    mutation.mutate(subjectText);
   };
+
+  const mutation = useMutation({
+    mutationFn: generateTopics,
+    onSuccess: (data) => {
+      navigate('/pre-chat', { state: data });
+    },
+    // onError: (error) => {
+    //   console.error('Error creating user:', error);
+    // },
+  });
+
   return (
     <Container>
       <Title>
@@ -37,6 +51,7 @@ function Dashboard() {
           placeholder="Quick search the subject"
           onSubmit={handleSubjectSelect}
           maxLength={80}
+          isLoading={mutation.isPending}
         />
       </ChatRowWrapper>
       <ChatRow

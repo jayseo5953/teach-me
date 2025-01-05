@@ -9,8 +9,8 @@ const ChatBubbleContainer = styled(Box)`
   margin-left: 16px;
   border-radius: 12px;
   color: ${({ theme }) => theme.palette.chatBubbles.textColor};
-  background-color: ${({ sender, theme }) =>
-    sender
+  background-color: ${({ $isSender, theme }) =>
+    $isSender
       ? theme.palette.chatBubbles.sender.backgroundColor
       : theme.palette.chatBubbles.receiver.backgroundColor};
   align-self: ${(props) => (props.sender ? 'flex-end' : 'flex-start')};
@@ -22,28 +22,28 @@ const ChatBubbleContainer = styled(Box)`
     width: 0;
     height: 0;
     border-style: solid;
-    border-width: ${(props) =>
-      props.sender ? '8px 0 8px 8px' : '8px 8px 8px 0'};
-    border-color: ${({ sender, theme }) =>
-      sender
+    border-width: ${({ $isSender }) =>
+      $isSender ? '8px 0 8px 8px' : '8px 8px 8px 0'};
+    border-color: ${({ $isSender, theme }) =>
+      $isSender
         ? `transparent transparent transparent ${theme.palette.chatBubbles.sender.backgroundColor}`
         : `transparent ${theme.palette.chatBubbles.receiver.backgroundColor} transparent transparent`};
     top: 10%;
     transform: translateY(50%);
-    ${(props) => (props.sender ? 'right: -8px;' : 'left: -8px;')}
+    ${({ $isSender }) => ($isSender ? 'right: -8px;' : 'left: -8px;')}
   }
 `;
 
 // Chat Bubble Component
-function ChatBubble({ message, sender = false }) {
+function ChatBubble({ message, isSender = false }) {
   return (
     <Box
       sx={{
         display: 'flex',
-        justifyContent: sender ? 'flex-end' : 'flex-start',
+        justifyContent: isSender ? 'flex-end' : 'flex-start',
       }}
     >
-      <ChatBubbleContainer sender={sender}>
+      <ChatBubbleContainer $isSender={isSender}>
         <Typography variant="body2">{message}</Typography>
       </ChatBubbleContainer>
     </Box>

@@ -6,6 +6,8 @@ import { Typography } from '@mui/material';
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import Button from '@/components/ui/Button';
 
 const ActionButtons = styled.div`
   display: flex;
@@ -23,29 +25,19 @@ const Container = styled.div`
 const TopicsGrid = styled.div`
   display: grid;
   margin-top: 16px;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 16px;
 `;
 
-const topics = [
-  'topic1',
-  'topic2',
-  'topic3',
-  'topic4',
-  'topic5',
-  'topic6',
-  'topic7',
-  'topic8',
-  'topic9',
-  'topic10',
-  'topic11',
-  'topic12',
-];
+const ViewMoreButton = styled(Button)`
+  padding: 0;
+`;
 
 const SelectTopic = () => {
   const [selectedTopics, setSelectedTopcis] = useState([]);
+  const [shouldShowRest, setShouldShowRest] = useState(false);
   const { state } = useLocation();
-  const subject = state?.subject;
+  const { subject, topics } = state || {};
 
   const handleSelectTopic = (topic) => {
     const set = new Set(selectedTopics);
@@ -56,6 +48,8 @@ const SelectTopic = () => {
     }
     setSelectedTopcis([...set]);
   };
+  const topicsToShow = shouldShowRest ? topics : topics.slice(0, 9);
+
   return (
     <Container>
       <div>
@@ -63,13 +57,12 @@ const SelectTopic = () => {
           avatarSize="xs"
           message={`That's a fantastic subject! Choose your topics that you would like to teach me today!`}
         />
-        {/* <ChatBubble sender={true} message="this is me!!" /> */}
         <br />
         <Sheet isFullWidth>
           <Typography variant="h3">Choose Your topic</Typography>
           <Typography variant="body3">{subject}</Typography>
           <TopicsGrid>
-            {topics.map((topic) => (
+            {topicsToShow.map((topic) => (
               <PillButton
                 key={topic}
                 selected={selectedTopics.includes(topic)}
@@ -78,10 +71,28 @@ const SelectTopic = () => {
               />
             ))}
           </TopicsGrid>
+          <br />
+
+          {!shouldShowRest && (
+            <ViewMoreButton
+              fullWidth
+              endIcon={<ArrowDownwardIcon />}
+              sx={{ padding: 0 }}
+              onClick={() => setShouldShowRest(true)}
+            >
+              View More Subjects
+            </ViewMoreButton>
+          )}
         </Sheet>
       </div>
       <ActionButtons>
-        <Link fullWidth variant="contained" to="/chat">
+        <Link
+          fullWidth
+          variant="contained"
+          to="/chat"
+          state={{ ...state, selectedTopics }}
+          disabled={!selectedTopics.length}
+        >
           Start Chat
         </Link>
       </ActionButtons>
