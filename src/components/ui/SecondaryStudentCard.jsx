@@ -18,6 +18,7 @@ const SecondaryStudentCard = ({ student }) => {
         width: '100%',
         textAlign: 'center',
         marginRight: '16px',
+        overflow: 'hidden',
       }}
       onClick={handleClick}
     >
