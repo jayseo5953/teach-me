@@ -1,60 +1,64 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Link from '@/components/ui/Link';
-// import Login from '@/pages/Login';
-// import ProtectedRoute from '@/layouts/ProtectedRoute';
+import Login from '@/pages/Login';
+import ProtectedRoute from '@/layouts/ProtectedRoute';
 import Root from '@/pages/Root';
 import Dashboard from '@/pages/Dashboard';
 import SelectTopic from '@/pages/PreChat/SelectTopic';
 import Chat from '@/pages/Chat/Chat';
 import ChatSummary from './pages/PostChat/ChatSummary';
 import HideParentRoute from './layouts/HideParentRoute';
+import SignUp from './pages/SignUp';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
     children: [
-      { index: true, element: <Dashboard /> },
-
       {
-        path: 'pre-chat',
-        element: (
-          <HideParentRoute
-            matchPath={'/pre-chat'}
-            PageComponent={<SelectTopic />}
-          />
-        ),
-      },
-      {
-        path: 'chat',
-        element: (
-          <HideParentRoute matchPath={'/chat'} PageComponent={<Chat />} />
-        ),
+        element: <ProtectedRoute />,
         children: [
           {
-            path: 'post-chat',
+            index: true,
+            path: 'dashboard',
+            element: <Dashboard />,
+          },
+          {
+            path: 'pre-chat',
             element: (
               <HideParentRoute
-                matchPath={'/chat/post-chat'}
-                PageComponent={<ChatSummary />}
+                matchPath={'/pre-chat'}
+                PageComponent={<SelectTopic />}
               />
             ),
           },
+          {
+            path: 'chat',
+            element: (
+              <HideParentRoute matchPath={'/chat'} PageComponent={<Chat />} />
+            ),
+            children: [
+              {
+                path: 'post-chat',
+                element: (
+                  <HideParentRoute
+                    matchPath={'/chat/post-chat'}
+                    PageComponent={<ChatSummary />}
+                  />
+                ),
+              },
+            ],
+          },
         ],
       },
-      // {
-      //   element: <ProtectedRoute />,
-      //   children: [
-      //     {
-      //       path: 'dashboard',
-      //       element: <Dashboard />,
-      //     },
-      //   ],
-      // },
-      // {
-      //   path: 'login',
-      //   element: <Login />,
-      // },
+      {
+        path: 'sign-up',
+        element: <SignUp />,
+      },
+      {
+        path: 'login',
+        element: <Login />,
+      },
     ],
   },
   {

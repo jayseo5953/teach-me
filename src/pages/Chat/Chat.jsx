@@ -3,13 +3,14 @@ import ChatRow from '@/components/ui/Chat/ChatRow';
 import Link from '@/components/ui/Link';
 import { createLecture, getLectureMessages } from '@/services/api/lectures';
 import LinearProgress from '@mui/material/LinearProgress';
-import socket from '@/services/webSocket/client';
+import createSocket from '@/services/webSocket/client';
 import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { Box, Chip, IconButton, Typography } from '@mui/material';
 import { ArrowDownward, CheckCircle } from '@mui/icons-material';
 import Divider from '@mui/material/Divider';
+import { useAuth } from '@/contexts/AuthContext';
 
 const headerHeight = '200px';
 
@@ -75,6 +76,8 @@ const Chat = () => {
   const [currentLecture, setCurrentLecture] = useState(lecture);
   const [remainingTopics, setRemainingTopics] = useState(selectedTopics);
   const [isFinished, setIsFinished] = useState(false);
+  const [socket, setSocket] = useState(null);
+  const { user } = useAuth();
 
   /* Refs */
   const bottomRef = useRef(null);
@@ -134,8 +137,13 @@ const Chat = () => {
   }, [isFinished]);
 
   useEffect(() => {
-    socket.connect();
-    socket.on('messageAck', async (data) => {
+    if (!user) {
+      return;
+    }
+    const _socket = createSocket(user.id);
+    setSocket(_socket);
+    _socket.connect();
+    _socket.on('messageAck', async (data) => {
       const { message, isSatisfactory } = data;
 
       if (isSatisfactory) {
@@ -163,16 +171,16 @@ const Chat = () => {
     });
 
     // Handle Connection Errors
-    socket.on('connect_error', (err) => {
+    _socket.on('connect_error', (err) => {
       console.error('Connection Error:', err.message);
     });
 
     // Cleanup on Unmount
     return () => {
-      socket.off('messageAck');
-      socket.disconnect();
+      _socket.off('messageAck');
+      _socket.disconnect();
     };
-  }, [remainingTopics, lecture, satisfactionCount]);
+  }, [remainingTopics, lecture, satisfactionCount, user]);
 
   console.log(remainingTopics);
   return (

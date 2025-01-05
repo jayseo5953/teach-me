@@ -1,6 +1,9 @@
 import { useContext, createContext, useState } from 'react';
 
-import { login as loginApiCall } from '@/services/api/auth';
+import {
+  login as loginApiCall,
+  signup as signupApiCall,
+} from '@/services/api/auth';
 const AuthContext = createContext();
 
 const AUTH_KEY = 'auth';
@@ -20,7 +23,8 @@ const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const res = await loginApiCall(email, password);
-    const userToSet = res.data.user;
+
+    const userToSet = res.data;
 
     if (userToSet) {
       setUser(userToSet);
@@ -30,13 +34,18 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const signup = async (email, password) => {
+    await signupApiCall(email, password);
+    await login(email, password);
+  };
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem(AUTH_KEY);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, signup, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
