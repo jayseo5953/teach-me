@@ -79,7 +79,7 @@ const SignUp = () => {
       navigate('/dashboard');
     } catch (e) {
       let message = e.message;
-      if (e.response.status === 400) {
+      if (e.response?.status === 400) {
         message =
           'This email is already registered. Please log in or use a different email to sign up.';
       }
