@@ -1,7 +1,7 @@
-import { Card } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Sheet from './Sheet';
 
-export default function ReviewCard({ lectures }) {
+export default function ReviewCard() {
   const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
@@ -41,11 +41,13 @@ export default function ReviewCard({ lectures }) {
   };
 
   return (
-    <Card
+    <Sheet
+      isFullWidth
       sx={{
         backgroundColor: '#fff',
         padding: '16px',
       }}
+      onClick={handleClick}
     >
       <div
         style={{
@@ -64,12 +66,12 @@ export default function ReviewCard({ lectures }) {
         <div style={textStyle}>Review the lecture</div>
 
         {/* Right chevron */}
-        <div onClick={handleClick}>
+        <div>
           <svg viewBox="0 0 24 24" style={chevronStyle}>
             <path d="M9.29 6.71a1 1 0 0 1 1.42 0l4.29 4.29-4.29 4.29a1 1 0 0 1-1.42-1.42L12.17 12l-2.88-2.88a1 1 0 0 1 0-1.41z" />
           </svg>
         </div>
       </div>
-    </Card>
+    </Sheet>
   );
 }

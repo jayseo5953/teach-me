@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import { getProperAnswers } from '../../services/api/reports';
 import ReviewTemplate from '../../components/ui/ReviewTemplate';
+import Link from '@/components/ui/Link';
 
 const Review = () => {
   const location = useLocation();
@@ -53,6 +54,10 @@ const Review = () => {
       {state.lectures.map((v, i) => {
         return <ReviewTemplate key={i} lecture={v} report={reports[i]} />;
       })}
+      <br />
+      <Link fullWidth variant="contained" to="/dashboard">
+        Return to Dashboard
+      </Link>
     </Box>
   );
 };
