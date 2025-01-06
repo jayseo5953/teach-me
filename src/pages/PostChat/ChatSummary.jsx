@@ -9,7 +9,6 @@ import { getOverallReport } from '../../services/api/reports';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import { getStudents } from '../../services/api/students';
 import SecondaryStudentCard from '../../components/ui/SecondaryStudentCard';
-import CircularChart from '../../components/ui/CircularChart';
 import AnswerCorrectnessCard from '../../components/AnswerCorrectnessCard';
 
 const ChatSummary = () => {
@@ -51,7 +50,6 @@ const ChatSummary = () => {
 
   return (
     <div>
-      ChatSummary
       <div
         style={{
           display: 'flex',
