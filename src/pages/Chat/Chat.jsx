@@ -156,6 +156,11 @@ const Chat = () => {
     setAnchorEl(null);
   };
 
+  // const handleUseHint = (hint) => {
+  //   sendMessage(hint);
+  //   handleClose();
+  // };
+
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
@@ -324,7 +329,14 @@ const Chat = () => {
                 alignItems: 'center',
               }}
             >
-              <HelpOutlineIcon onClick={async (e) => await handleClick(e)} />
+              <Button
+                onClick={async (e) => await handleClick(e)}
+                variant="contained"
+                startIcon={<HelpOutlineIcon />}
+                style={{ padding: '4px 12px' }}
+              >
+                Hint
+              </Button>
               <StyledPopover
                 id={id}
                 open={open}
@@ -344,7 +356,15 @@ const Chat = () => {
                   {hintLoading ? (
                     <LoadingSpinner />
                   ) : (
-                    <Typography>{hint}</Typography>
+                    <Box>
+                      <Typography>{hint}</Typography>
+                      {/* <Button
+                        sx={{ margin: 'auto', display: 'block' }}
+                        onClick={() => handleUseHint(hint)}
+                      >
+                        Use this hint
+                      </Button> */}
+                    </Box>
                   )}
                 </div>
               </StyledPopover>
