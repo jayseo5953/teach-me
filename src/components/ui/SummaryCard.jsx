@@ -53,6 +53,7 @@ const SummaryCard = ({ report, student }) => {
         sx={{
           padding: '24px',
           paddingBottom: '16px',
+          backgroundColor: '#fff',
         }}
       >
         <div

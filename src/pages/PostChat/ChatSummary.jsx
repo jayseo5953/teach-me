@@ -9,6 +9,7 @@ import { getOverallReport } from '../../services/api/reports';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import { getStudents } from '../../services/api/students';
 import SecondaryStudentCard from '../../components/ui/SecondaryStudentCard';
+import AnswerCorrectnessCard from '../../components/AnswerCorrectnessCard';
 
 const ChatSummary = () => {
   const location = useLocation();
@@ -58,7 +59,6 @@ const ChatSummary = () => {
 
   return (
     <div>
-      ChatSummary
       <div
         style={{
           display: 'flex',
@@ -98,7 +98,13 @@ const ChatSummary = () => {
           ))}
         </div>
       </div>
-      <div>
+      <div style={{ marginTop: '24px' }}>
+        <Typography variant="h3">Summary</Typography>
+        <AnswerCorrectnessCard
+          percentage={overviewReport?.correctAnswerRate?.rate}
+        />
+      </div>
+      <div style={{ marginTop: '24px' }}>
         <Link to="/dashboard">Go home</Link>
       </div>
     </div>
