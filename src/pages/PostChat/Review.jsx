@@ -49,11 +49,11 @@ const Review = () => {
   if (isLoading) return renderLoading();
 
   return (
-    <>
+    <Box sx={{ paddingTop: '24px', paddingBottom: '24px' }}>
       {state.lectures.map((v, i) => {
-        return <ReviewTemplate lecture={v} report={reports[i]} />;
+        return <ReviewTemplate key={i} lecture={v} report={reports[i]} />;
       })}
-    </>
+    </Box>
   );
 };
 
