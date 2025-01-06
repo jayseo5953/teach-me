@@ -31,6 +31,7 @@ const routesToHideBackButtons = [
   '/login',
   '/select-student',
 ];
+
 const routesToHideHeader = ['/chat'];
 
 const Header = () => {

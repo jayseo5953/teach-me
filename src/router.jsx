@@ -10,6 +10,7 @@ import ChatSummary from './pages/PostChat/ChatSummary';
 import HideParentRoute from './layouts/HideParentRoute';
 import SignUp from './pages/SignUp';
 import SelectStudent from './pages/SelectStudent';
+import Review from './pages/PostChat/Review';
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,12 @@ const router = createBrowserRouter([
                     PageComponent={<ChatSummary />}
                   />
                 ),
+                children: [
+                  {
+                    path: 'review',
+                    element: <Review />,
+                  },
+                ],
               },
             ],
           },

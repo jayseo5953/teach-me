@@ -10,6 +10,7 @@ import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import { getStudents } from '../../services/api/students';
 import SecondaryStudentCard from '../../components/ui/SecondaryStudentCard';
 import AnswerCorrectnessCard from '../../components/AnswerCorrectnessCard';
+import ReviewCard from '../../components/ui/ReviewCard';
 
 const ChatSummary = () => {
   const location = useLocation();
@@ -18,11 +19,15 @@ const ChatSummary = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [students, setStudents] = useState([]);
   const [overviewReport, setOverviewReport] = useState({});
+  const [lectures, setLectures] = useState([]);
 
   useEffect(() => {
+    if (!lectures.length) {
+      setLectures(state?.lectures);
+    }
     (async () => {
       setIsLoading(true);
-      const promises = [getOverallReport(state.lectures), getStudents()];
+      const promises = [getOverallReport(state?.lectures), getStudents()];
       const [overviewReport, students] = await Promise.all(promises);
       const filteredStudents = students.filter(
         (s) => s.id !== studentContext?.id
@@ -103,6 +108,9 @@ const ChatSummary = () => {
         <AnswerCorrectnessCard
           percentage={overviewReport?.correctAnswerRate?.rate}
         />
+      </div>
+      <div style={{ marginTop: '24px' }}>
+        <ReviewCard lectures={lectures} />
       </div>
       <div style={{ marginTop: '24px' }}>
         <Link to="/dashboard">Go home</Link>
