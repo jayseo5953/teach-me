@@ -106,6 +106,7 @@ const Login = () => {
             variant="body2"
             color="primary"
             onClick={() => navigate('/sign-up')}
+            sx={{ cursor: 'pointer' }}
           >
             Create Account
           </Typography>

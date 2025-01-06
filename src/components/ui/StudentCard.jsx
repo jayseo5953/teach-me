@@ -10,11 +10,12 @@ const StudentCard = ({ student, handleSelect, isSelected }) => {
           : '0.33px solid rgba(0, 0, 0, 0.12)',
         borderRadius: '24px',
         width: '100%',
-        height: '277px',
+        height: '100%',
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'column',
         boxSizing: 'border-box',
+        cursor: 'pointer',
       }}
       onClick={handleSelect}
     >

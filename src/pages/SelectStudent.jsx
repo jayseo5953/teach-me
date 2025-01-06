@@ -1,7 +1,7 @@
 import Button from '@/components/ui/Button';
 import { useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
-import { Container } from '@mui/material';
+import { Box, Container, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import StudentCard from '@/components/ui/StudentCard';
 import { useStudent } from '@/contexts/StudentContext';
@@ -33,46 +33,52 @@ const SelectStudent = () => {
   };
 
   return (
-    <Container>
-      {isLoading ? (
-        <LoadingSpinner />
-      ) : (
-        <div>
-          <Typography
-            variant="h3"
-            sx={{
-              marginBottom: '8px',
-            }}
-          >
-            Choose your student
-          </Typography>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '16px',
-              marginBottom: '16px',
-            }}
-          >
-            {students.map((student) => (
-              <StudentCard
-                key={student.id}
-                student={student}
-                isSelected={selectedStudent?.id === student.id}
-                handleSelect={() => handleSelect(student)}
-              />
-            ))}
+    <Container
+      sx={{
+        marginTop: '50px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Box>
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <div>
+            <Typography
+              variant="h3"
+              sx={{
+                marginBottom: '8px',
+              }}
+            >
+              Choose your student
+            </Typography>
+            <Grid container spacing={2}>
+              {students.map((student, index) => (
+                <Grid item xs={6} sm={3} key={index}>
+                  <StudentCard
+                    key={student.id}
+                    student={student}
+                    isSelected={selectedStudent?.id === student.id}
+                    handleSelect={() => handleSelect(student)}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+            <br />
+            <br />
+            <Button
+              disabled={!selectedStudent}
+              variant="contained"
+              fullWidth
+              onClick={handleClickButton}
+            >
+              Start
+            </Button>
           </div>
-          <Button
-            disabled={!selectedStudent}
-            variant="contained"
-            fullWidth
-            onClick={handleClickButton}
-          >
-            Start
-          </Button>
-        </div>
-      )}
+        )}
+      </Box>
     </Container>
   );
 };
