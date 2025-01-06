@@ -12,11 +12,14 @@ const ReviewTemplate = ({ lecture, report }) => {
       {goodAnswers?.length ? (
         <>
           <div>
-            <Typography variant="h3" sx={{ color: green[500] }}>
+            <Typography
+              variant="h3"
+              sx={{ color: green[500], marginTop: '16px' }}
+            >
               Good Answers
             </Typography>
             <div style={{ marginTop: '16px' }}>
-              {badAnswers.map((v, i) => (
+              {goodAnswers.map((v, i) => (
                 <div key={i} style={{ marginBottom: '8px' }}>
                   <div style={{ marginTop: '8px' }}>
                     <Typography>
@@ -40,7 +43,7 @@ const ReviewTemplate = ({ lecture, report }) => {
                       variant="body"
                       sx={{ color: 'rgba(0,0,0,0.7)' }}
                     >
-                      {v['User Good Answer']}
+                      {v['User Good Answer'] || 'No response'}
                     </Typography>
                   </div>
                   {!!v['Improved Answer'] && (
@@ -56,6 +59,8 @@ const ReviewTemplate = ({ lecture, report }) => {
                       </Typography>
                     </div>
                   )}
+                  <br />
+                  <Divider />
                 </div>
               ))}
             </div>
@@ -66,7 +71,10 @@ const ReviewTemplate = ({ lecture, report }) => {
       {badAnswers?.length ? (
         <>
           <div>
-            <Typography variant="h3" sx={{ color: pink[500] }}>
+            <Typography
+              variant="h3"
+              sx={{ color: pink[500], marginTop: '16px' }}
+            >
               Bad Answers
             </Typography>
             <div style={{ marginTop: '16px' }}>
@@ -94,7 +102,7 @@ const ReviewTemplate = ({ lecture, report }) => {
                       variant="body"
                       sx={{ color: 'rgba(0,0,0,0.7)' }}
                     >
-                      {v['User Bad Answer']}
+                      {v['User Bad Answer'] || 'No response'}
                     </Typography>
                   </div>
 

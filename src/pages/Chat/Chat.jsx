@@ -78,7 +78,7 @@ const StyledPopover = styled(Popover)`
   }
 `;
 
-const requiredSatisfactionCount = 3;
+const requiredSatisfactionCount = 2;
 
 const Chat = () => {
   const { state } = useLocation();
