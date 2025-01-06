@@ -6,12 +6,22 @@ import createSocket from '@/services/webSocket/client';
 import { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { Box, Chip, IconButton, Typography } from '@mui/material';
+import {
+  Box,
+  Card,
+  Chip,
+  IconButton,
+  Popover,
+  Typography,
+} from '@mui/material';
 import { ArrowDownward, CheckCircle } from '@mui/icons-material';
 import { useAuth } from '@/contexts/AuthContext';
 import ConfirmationModal from '@/components/ConfirmationModal';
 import Button from '@/components/ui/Button';
 import { useStudent } from '@/contexts/StudentContext';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { getHint } from '../../services/api/hints';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import FinishedChatModal from '@/components/FinishedChatModal';
 
 const headerHeight = '170px';
@@ -86,6 +96,9 @@ const Chat = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { studentContext } = useStudent();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [hint, setHint] = useState('');
+  const [hintLoading, setHintLoading] = useState(true);
 
   /* Refs */
   const bottomRef = useRef(null);
@@ -118,6 +131,29 @@ const Chat = () => {
       socket.emit('messageSubmitted', payload);
     }
   };
+
+  const handleClick = async (event) => {
+    setAnchorEl(event.currentTarget);
+
+    setHintLoading(true);
+    const filterStudentQuestions = incomingMessages.filter(
+      (m) => m.sender === 'STUDENT'
+    );
+    const lastQuestion =
+      filterStudentQuestions[filterStudentQuestions.length - 1];
+
+    const hint = await getHint(lastQuestion.content);
+
+    setHint(hint);
+    setHintLoading(false);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   /* UseEffect */
   useEffect(() => {
@@ -269,7 +305,47 @@ const Chat = () => {
           </Box>
 
           <br />
-          <Typography variant="h3">Topic: {currentTopic}</Typography>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Typography variant="h3">Topic: {currentTopic}</Typography>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <HelpOutlineIcon onClick={async (e) => await handleClick(e)} />
+              <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+              >
+                <div
+                  style={{
+                    padding: '24px',
+                    background: '#fff',
+                  }}
+                >
+                  {hintLoading ? (
+                    <LoadingSpinner />
+                  ) : (
+                    <Typography>{hint}</Typography>
+                  )}
+                </div>
+              </Popover>
+            </div>
+          </div>
         </div>
       </Header>
 

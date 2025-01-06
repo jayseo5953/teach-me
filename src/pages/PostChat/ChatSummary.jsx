@@ -12,6 +12,7 @@ import SecondaryStudentCard from '../../components/ui/SecondaryStudentCard';
 import LectureReport from '@/components/ui/LectureReport';
 import Button from '@/components/ui/Button';
 import styled from 'styled-components';
+import AnswerCorrectnessCard from '../../components/AnswerCorrectnessCard';
 
 const Pill = styled(Button)`
   & {
@@ -89,7 +90,6 @@ const ChatSummary = () => {
   ) : (
     <div>
       <br />
-
       <div
         style={{
           display: 'flex',
@@ -178,7 +178,14 @@ const ChatSummary = () => {
         </div>
       </div>
       <div style={{ paddingBottom: '24px' }}>
-        <br />
+        <div style={{ marginTop: '24px' }}>
+          <Typography variant="h3" marginBottom="8px">
+            Summary
+          </Typography>
+          <AnswerCorrectnessCard
+            percentage={overviewReport?.correctAnswerRate?.rate}
+          />
+        </div>
         <br />
         <Link fullWidth variant="contained" to="/dashboard">
           Return to Dashboard
