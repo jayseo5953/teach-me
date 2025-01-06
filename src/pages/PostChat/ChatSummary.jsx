@@ -32,7 +32,7 @@ const ChatSummary = () => {
   const navigate = useNavigate();
   const { studentContext } = useStudent();
   const [isLoading, setIsLoading] = useState(true);
-  const [fetchError, setFetchError] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
   const [currentLecture, setCurrentLecture] = useState(state.lectures[0]);
 
   const [students, setStudents] = useState(state.students || []);

@@ -25,7 +25,7 @@ const SecondaryStudentCard = ({ student }) => {
       <img
         src={student.image}
         style={{
-          height: '94px',
+          height: 'auto',
           borderRadius: '16px',
         }}
       />
