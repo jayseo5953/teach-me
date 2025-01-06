@@ -1,5 +1,5 @@
 import Link from '@/components/ui/Link';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useStudent } from '@/contexts/StudentContext';
 import ChatBubble from '../../components/ui/Chat/ChatBubble';
 import { Box, Typography } from '@mui/material';
@@ -29,47 +29,54 @@ const Pill = styled(Button)`
 const ChatSummary = () => {
   const location = useLocation();
   const { state } = location;
+  const navigate = useNavigate();
   const { studentContext } = useStudent();
   const [isLoading, setIsLoading] = useState(true);
-  const [isLectureLoading, setIsLectureLoading] = useState(false);
-  const [students, setStudents] = useState([]);
-  const [overviewReport, setOverviewReport] = useState({});
   const [currentLecture, setCurrentLecture] = useState(state.lectures[0]);
-  const [currentLectureReport, setCurrentLectureReport] = useState(null);
-  const [lectures, setLectures] = useState([]);
+
+  const [students, setStudents] = useState(state.students || []);
+  const [overviewReport, setOverviewReport] = useState(
+    state.overviewReport || {}
+  );
+  const [lectureReports, setLectureReports] = useState(
+    state.lectureReports || []
+  );
+  const [currentLectureReport, setCurrentLectureReport] = useState(
+    lectureReports[0]
+  );
 
   useEffect(() => {
-    if (!lectures.length) {
-      setLectures(state?.lectures);
+    //data is already loaded from location state
+    if (currentLectureReport) {
+      return setIsLoading(false);
     }
+
     (async () => {
       setIsLoading(true);
 
       const promises = [
         getOverallReport(state?.lectures),
         getStudents(),
-        getLectureRport(currentLecture.id),
+        ...state.lectures.map((lecture) => getLectureRport(lecture.id)),
       ];
-      const [overviewReport, students, lectureReport] = await Promise.all(
+      const [overviewReport, students, ...lectureReports] = await Promise.all(
         promises
       );
       const filteredStudents = students.filter(
         (s) => s.id !== studentContext?.id
       );
 
-      setCurrentLectureReport(lectureReport);
+      setLectureReports(lectureReports);
+      setCurrentLectureReport(lectureReports[0]);
       setOverviewReport(overviewReport);
       setStudents(filteredStudents);
       setIsLoading(false);
     })();
   }, []);
 
-  const handleSelectLecture = async (lecture) => {
-    setIsLectureLoading(true);
-    const report = await getLectureRport(lecture.id);
-    setCurrentLecture(lecture);
-    setCurrentLectureReport(report);
-    setIsLectureLoading(false);
+  const handleSelectLecture = async (index) => {
+    setCurrentLecture(state.lectures[index]);
+    setCurrentLectureReport(lectureReports[index]);
   };
 
   return isLoading ? (
@@ -153,7 +160,7 @@ const ChatSummary = () => {
             marginTop: '8px',
           }}
         >
-          {state.lectures.map((lecture) => (
+          {state.lectures.map((lecture, index) => (
             <Pill
               variant={
                 lecture.topic === currentLecture.topic
@@ -161,8 +168,7 @@ const ChatSummary = () => {
                   : 'outlined'
               }
               key={lecture.id}
-              isLoading={isLectureLoading}
-              onClick={() => handleSelectLecture(lecture)}
+              onClick={() => handleSelectLecture(index)}
             >
               {lecture.topic}
             </Pill>
@@ -194,7 +200,19 @@ const ChatSummary = () => {
           />
         </div>
         <div style={{ marginTop: '24px' }}>
-          <ReviewCard lectures={lectures} />
+          <ReviewCard
+            onClick={() =>
+              navigate('review', {
+                state: {
+                  ...state,
+                  students,
+                  overviewReport,
+                  lectureReports,
+                  currentLectureReport,
+                },
+              })
+            }
+          />
         </div>
         <br />
         <Link fullWidth variant="contained" to="/dashboard">

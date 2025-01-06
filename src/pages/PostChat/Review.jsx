@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import { getProperAnswers } from '../../services/api/reports';
 import ReviewTemplate from '../../components/ui/ReviewTemplate';
@@ -21,12 +21,16 @@ const Pill = styled(Button)`
 
 const Review = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { state } = location;
   const [isLoading, setIsLoading] = useState(true);
-  const [reports, setReports] = useState([]);
+  const [reports, setReports] = useState(state.reports || []);
   const [indexToView, setIndexToView] = useState(0);
 
   useEffect(() => {
+    if (reports.length) {
+      return setIsLoading(false);
+    }
     (async () => {
       setIsLoading(true);
       const lectures = state.lectures;
@@ -34,6 +38,10 @@ const Review = () => {
       const reports = await Promise.all(promises);
       setReports(reports);
       setIsLoading(false);
+      navigate('.', {
+        state: { ...location.state, reports },
+        replace: true,
+      });
     })();
   }, []);
 
