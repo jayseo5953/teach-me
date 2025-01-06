@@ -1,5 +1,7 @@
 import { io } from 'socket.io-client';
-const SOCKET_URL = import.meta.env.VITE_API_URL;
+const SOCKET_URL =
+  import.meta.env.VITE_API_URL ||
+  'https://katec-hackathon-backend-dev.up.railway.app';
 
 const createSocket = (userId) => {
   return io(SOCKET_URL, {
