@@ -13,6 +13,7 @@ import LectureReport from '@/components/ui/LectureReport';
 import Button from '@/components/ui/Button';
 import styled from 'styled-components';
 import AnswerCorrectnessCard from '../../components/AnswerCorrectnessCard';
+import ReviewCard from '../../components/ui/ReviewCard';
 
 const Pill = styled(Button)`
   & {
@@ -32,22 +33,24 @@ const ChatSummary = () => {
   const [students, setStudents] = useState([]);
   const [overviewReport, setOverviewReport] = useState({});
   const [currentLecture, setCurrentLecture] = useState(state.lectures[0]);
-  const [currentLectureReport, setCurrentLectureReport] = useState(
-    state.lectures[0]
-  );
+  const [currentLectureReport, setCurrentLectureReport] = useState(null);
+  const [lectures, setLectures] = useState([]);
 
   useEffect(() => {
+    if (!lectures.length) {
+      setLectures(state?.lectures);
+    }
     (async () => {
       setIsLoading(true);
+
       const promises = [
-        getOverallReport(state.lectures),
+        getOverallReport(state?.lectures),
         getStudents(),
         getLectureRport(currentLecture.id),
       ];
       const [overviewReport, students, lectureReport] = await Promise.all(
         promises
       );
-
       const filteredStudents = students.filter(
         (s) => s.id !== studentContext?.id
       );
@@ -185,6 +188,9 @@ const ChatSummary = () => {
           <AnswerCorrectnessCard
             percentage={overviewReport?.correctAnswerRate?.rate}
           />
+        </div>
+        <div style={{ marginTop: '24px' }}>
+          <ReviewCard lectures={lectures} />
         </div>
         <br />
         <Link fullWidth variant="contained" to="/dashboard">
