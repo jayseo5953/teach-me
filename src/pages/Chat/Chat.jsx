@@ -6,14 +6,7 @@ import createSocket from '@/services/webSocket/client';
 import { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import {
-  Box,
-  Card,
-  Chip,
-  IconButton,
-  Popover,
-  Typography,
-} from '@mui/material';
+import { Box, Chip, IconButton, Popover, Typography } from '@mui/material';
 import { ArrowDownward, CheckCircle } from '@mui/icons-material';
 import { useAuth } from '@/contexts/AuthContext';
 import ConfirmationModal from '@/components/ConfirmationModal';
@@ -75,6 +68,13 @@ const ScrollToBottomButton = styled(IconButton)`
   &,
   &:hover {
     background-color: ${({ theme }) => theme.palette.primary.main};
+  }
+`;
+
+const StyledPopover = styled(Popover)`
+  && .MuiPaper-root {
+    border-radius: 32px;
+    margin-right: 24px;
   }
 `;
 
@@ -321,7 +321,7 @@ const Chat = () => {
               }}
             >
               <HelpOutlineIcon onClick={async (e) => await handleClick(e)} />
-              <Popover
+              <StyledPopover
                 id={id}
                 open={open}
                 anchorEl={anchorEl}
@@ -343,7 +343,7 @@ const Chat = () => {
                     <Typography>{hint}</Typography>
                   )}
                 </div>
-              </Popover>
+              </StyledPopover>
             </div>
           </div>
         </div>
