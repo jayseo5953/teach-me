@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import Sheet from './Sheet';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 export default function ReviewCard() {
   const navigate = useNavigate();
@@ -26,12 +27,6 @@ export default function ReviewCard() {
     fontSize: '14px',
     fontWeight: 500,
     color: '#000', // or #444
-  };
-
-  const chevronStyle = {
-    width: '16px',
-    height: '16px',
-    fill: '#999', // arrow color
   };
 
   const bookmarkStyle = {
@@ -67,9 +62,7 @@ export default function ReviewCard() {
 
         {/* Right chevron */}
         <div>
-          <svg viewBox="0 0 24 24" style={chevronStyle}>
-            <path d="M9.29 6.71a1 1 0 0 1 1.42 0l4.29 4.29-4.29 4.29a1 1 0 0 1-1.42-1.42L12.17 12l-2.88-2.88a1 1 0 0 1 0-1.41z" />
-          </svg>
+          <ChevronRightIcon />
         </div>
       </div>
     </Sheet>

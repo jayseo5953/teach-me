@@ -1,5 +1,11 @@
-import { Divider, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { green, pink } from '@mui/material/colors';
+import Sheet from './Sheet';
+import styled from 'styled-components';
+
+const StyledSheet = styled(Sheet)`
+  margin-bottom: 16px;
+`;
 
 const ReviewTemplate = ({ lecture, report }) => {
   const goodAnswers = report['Good Answer'];
@@ -7,10 +13,12 @@ const ReviewTemplate = ({ lecture, report }) => {
   return (
     <>
       <div style={{ marginBottom: '16px' }}>
-        <Typography variant="h2">Topic: {lecture.topic}</Typography>
+        <Typography variant="h2" textAlign={'center'}>
+          Topic: {lecture.topic}
+        </Typography>
       </div>
       {goodAnswers?.length ? (
-        <>
+        <StyledSheet>
           <div>
             <Typography
               variant="h3"
@@ -59,17 +67,15 @@ const ReviewTemplate = ({ lecture, report }) => {
                       </Typography>
                     </div>
                   )}
-                  <br />
-                  <Divider />
                 </div>
               ))}
             </div>
           </div>{' '}
-        </>
+        </StyledSheet>
       ) : null}
 
       {badAnswers?.length ? (
-        <>
+        <StyledSheet>
           <div>
             <Typography
               variant="h3"
@@ -117,13 +123,11 @@ const ReviewTemplate = ({ lecture, report }) => {
                       {v['Improved Answer']}
                     </Typography>
                   </div>
-                  <br />
-                  <Divider />
                 </div>
               ))}
             </div>
           </div>
-        </>
+        </StyledSheet>
       ) : null}
     </>
   );

@@ -15,6 +15,8 @@ const Container = styled.div`
   display: inline-block;
   width: ${({ $isFullWidth }) => ($isFullWidth ? '100%' : 'auto')};
   box-shadow: ${({ $shadowDepth }) => shadowDepths[$shadowDepth]};
+
+  ${({ $clickable }) => $clickable && `cursor: pointer;`}
 `;
 
 const Sheet = ({
@@ -29,6 +31,7 @@ const Sheet = ({
       $isFullWidth={isFullWidth}
       $shadowDepth={shadowDepth}
       onClick={onClick}
+      $clickable={!!onClick}
       {...rest}
     >
       {children}
