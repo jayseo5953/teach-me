@@ -1,16 +1,7 @@
-import { useLocation, useNavigate } from 'react-router-dom';
 import Sheet from './Sheet';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
-export default function ReviewCard() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { state } = location;
-
-  const handleClick = () => {
-    navigate('review', { state: { ...state } });
-  };
-
+export default function ReviewCard({ onClick }) {
   const iconWrapperStyle = {
     display: 'flex',
     alignItems: 'center',
@@ -42,7 +33,7 @@ export default function ReviewCard() {
         backgroundColor: '#fff',
         padding: '16px',
       }}
-      onClick={handleClick}
+      onClick={onClick}
     >
       <div
         style={{
