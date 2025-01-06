@@ -1,7 +1,6 @@
 import Button from '@/components/ui/Button';
 import { TextField } from '@mui/material';
 import { useAuth } from '@/contexts/AuthContext';
-import { parseError } from '@/utils/parseError';
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -9,9 +8,14 @@ import Typography from '@mui/material/Typography';
 import { Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
+const StyledButton = styled(Button)`
+  margin-top: 8px;
+`;
+
 const ErrorMessage = styled.div`
-  margin-top: 16px;
-  text-align: center;
+  margin-bottom: 8px;
+  margin-top: -8px;
+
   color: ${({ theme }) => theme.palette.error};
 `;
 
@@ -27,10 +31,10 @@ const StyledTextField = styled(TextField)`
     background-color: rgba(0, 0, 0, 0.02);
     border-radius: 16px;
     width: 100%;
+    margin-bottom: 16px;
     fieldset {
       border: none;
     }
-    margin-bottom: 24px;
   }
 `;
 
@@ -39,20 +43,44 @@ const SignUpTextContainer = styled.div`
   text-align: center;
 `;
 
+const validateSignUp = (formData) => {
+  // Confirm Password Validation
+  if (formData.get('password') !== formData.get('confirmPassword')) {
+    throw new Error('Passwords do not match');
+  }
+  // Password Validation
+  if (
+    formData.get('password').length < 8 ||
+    !/\d/.test(formData.get('password')) ||
+    !/[a-zA-Z]/.test(formData.get('password'))
+  ) {
+    throw new Error(
+      'Password must be at least 8 characters and include a letter and a number'
+    );
+  }
+
+  return true;
+};
+
 const SignUp = () => {
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { signup, user } = useAuth();
   const navigate = useNavigate();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     setError(null);
+    setIsLoading(true);
     const formData = new FormData(e.target);
     try {
+      validateSignUp(formData);
       await signup(formData.get('email'), formData.get('password'));
       navigate('/dashboard');
     } catch (e) {
-      setError(parseError(e));
+      setError(e.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -82,23 +110,31 @@ const SignUp = () => {
           placeholder="enter your password"
           required
         />
-        <Button variant="contained" fullWidth type="submit">
-          Sign Up
-        </Button>
+        <label htmlFor="password">
+          <Typography variant="footnote">Confirm Password</Typography>
+        </label>
+        <StyledTextField
+          name="confirmPassword"
+          type="password"
+          placeholder="enter your password again"
+          required
+        />
         {error && (
           <ErrorMessage>
-            <Typography
-              variant="caption2"
-              color="error"
-              textAlign="center"
-              sx={{
-                display: 'inline-block',
-              }}
-            >
-              Failed to sign up
+            <Typography variant="caption1" color="error">
+              {error}
             </Typography>
           </ErrorMessage>
         )}
+
+        <StyledButton
+          isLoading={isLoading}
+          variant="contained"
+          fullWidth
+          type="submit"
+        >
+          Sign Up
+        </StyledButton>
       </form>
       <SignUpTextContainer>
         <Typography variant="body2">
