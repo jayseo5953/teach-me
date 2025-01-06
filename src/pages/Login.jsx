@@ -10,11 +10,11 @@ import { Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const ErrorMessage = styled.div`
-  margin-top: 16px;
-  text-align: center;
+  margin-bottom: 8px;
+  margin-top: -8px;
+
   color: ${({ theme }) => theme.palette.error};
 `;
-
 const HeaderText = styled.h4`
   height: 73px;
 `;
@@ -27,10 +27,10 @@ const StyledTextField = styled(TextField)`
     background-color: rgba(0, 0, 0, 0.02);
     border-radius: 16px;
     width: 100%;
+    margin-bottom: 16px;
     fieldset {
       border: none;
     }
-    margin-bottom: 24px;
   }
 `;
 
@@ -41,17 +41,21 @@ const SignUpTextContainer = styled.div`
 
 const Login = () => {
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { login, user } = useAuth();
   const navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
+    setIsLoading(true);
     const formData = new FormData(e.target);
     try {
       await login(formData.get('email'), formData.get('password'));
       navigate('/dashboard');
     } catch (e) {
       setError(parseError(e));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -81,23 +85,21 @@ const Login = () => {
           placeholder="enter your password"
           required
         />
-        <Button variant="contained" fullWidth type="submit">
-          Login
-        </Button>
         {error && (
           <ErrorMessage>
-            <Typography
-              variant="caption2"
-              color="error"
-              textAlign="center"
-              sx={{
-                display: 'inline-block',
-              }}
-            >
-              Incorrect email or password
+            <Typography variant="caption1" color="error">
+              {error}
             </Typography>
           </ErrorMessage>
         )}
+        <Button
+          isLoading={isLoading}
+          variant="contained"
+          fullWidth
+          type="submit"
+        >
+          Login
+        </Button>
       </form>
       <SignUpTextContainer>
         <Typography variant="body2">
