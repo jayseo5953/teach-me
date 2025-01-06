@@ -1,5 +1,5 @@
 import ChatInput from '@/components/ui/Chat/ChatInput';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
@@ -62,13 +62,30 @@ function Dashboard() {
   return (
     <Container>
       <Title>
-        <Typography variant="h1">What should we study today?</Typography>
+        <Box
+          component="video"
+          src="/assets/dashboard-video.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          sx={{
+            width: '120px',
+            height: '164px',
+            margin: 'auto',
+            display: 'block',
+          }}
+        />
+        <Typography variant="h1" textAlign="center">
+          What should we study today?
+        </Typography>
       </Title>
       <ChatRowWrapper>
         <StyledChatInput
           fullWidth
           placeholder="Quick search the subject"
           onSubmit={handleSubjectSelect}
+          rows={4}
           maxLength={80}
           isLoading={mutation.isPending}
         />

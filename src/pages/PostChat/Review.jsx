@@ -14,6 +14,8 @@ const Pill = styled(Button)`
     padding: 2px 24px;
     margin-left: 4px;
     height: 31px;
+    white-space: nowrap;
+    margin-bottom: 4px;
   }
 `;
 
@@ -78,7 +80,9 @@ const Review = () => {
         <Box
           sx={{
             display: 'flex',
-            flexWrap: 'nowrap',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexWrap: 'wrap',
             marginTop: '8px',
           }}
         >
