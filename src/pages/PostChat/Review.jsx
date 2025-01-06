@@ -5,12 +5,24 @@ import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import { getProperAnswers } from '../../services/api/reports';
 import ReviewTemplate from '../../components/ui/ReviewTemplate';
 import Link from '@/components/ui/Link';
+import styled from 'styled-components';
+import Button from '@/components/ui/Button';
+
+const Pill = styled(Button)`
+  & {
+    border-radius: 999px; /* Pill Shape */
+    padding: 2px 24px;
+    margin-left: 4px;
+    height: 31px;
+  }
+`;
 
 const Review = () => {
   const location = useLocation();
   const { state } = location;
   const [isLoading, setIsLoading] = useState(true);
   const [reports, setReports] = useState([]);
+  const [indexToView, setIndexToView] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -51,9 +63,44 @@ const Review = () => {
 
   return (
     <Box sx={{ paddingTop: '24px', paddingBottom: '24px' }}>
-      {state.lectures.map((v, i) => {
-        return <ReviewTemplate key={i} lecture={v} report={reports[i]} />;
-      })}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: '4px',
+        }}
+      >
+        <Typography variant="caption1" color="primary">
+          Select a topic to view a topic report
+        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'nowrap',
+            marginTop: '8px',
+          }}
+        >
+          {reports.map((lecture, index) => (
+            <Pill
+              variant={index === indexToView ? 'contained' : 'outlined'}
+              key={index}
+              onClick={() => setIndexToView(index)}
+            >
+              {state.lectures[index].topic}
+            </Pill>
+          ))}
+        </Box>
+      </Box>
+
+      <br />
+
+      <ReviewTemplate
+        lecture={state.lectures[indexToView]}
+        report={reports[indexToView]}
+      />
+      <br />
       <br />
       <Link fullWidth variant="contained" to="/dashboard">
         Return to Dashboard

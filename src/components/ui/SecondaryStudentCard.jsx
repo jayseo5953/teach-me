@@ -15,7 +15,7 @@ const SecondaryStudentCard = ({ student }) => {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        width: '100%',
+        width: 'auto',
         textAlign: 'center',
         marginRight: '16px',
         overflow: 'hidden',
