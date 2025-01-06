@@ -33,6 +33,8 @@ const ChatInputWrapper = styled.div`
   left: 24px;
   right: 24px;
   bottom: 24px;
+  max-width: 735px;
+  margin: auto;
 `;
 
 const Header = styled.header`
@@ -44,6 +46,8 @@ const Header = styled.header`
   left: 24px;
   right: 24px;
   box-sizing: border-box;
+  max-width: 735px;
+  margin: auto;
 `;
 
 const Nav = styled.nav`
