@@ -68,7 +68,7 @@ const ScrollToBottomButton = styled(IconButton)`
   }
 `;
 
-const requiredSatisfactionCount = 2;
+const requiredSatisfactionCount = 3;
 
 const Chat = () => {
   const { state } = useLocation();

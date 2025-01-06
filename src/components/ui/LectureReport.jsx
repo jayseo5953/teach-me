@@ -1,6 +1,16 @@
-import { Card, Typography } from '@mui/material';
+import { ListItemText, Typography } from '@mui/material';
+import Sheet from './Sheet';
+import { List, ListItem, ListItemIcon } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
+import styled from 'styled-components';
 
-const SummaryCard = ({ report, student }) => {
+const StyledListItemText = styled(ListItemText)`
+  && span {
+    font-size: 14px;
+  }
+`;
+
+const LectureReport = ({ report, lecture }) => {
   const renderDataRow = (key, value = 1) => {
     const valuePercentage = value * 10;
     return (
@@ -36,7 +46,7 @@ const SummaryCard = ({ report, student }) => {
         >
           <div
             style={{
-              background: 'linear-gradient(90deg, #C84E89 0%, #F15F79 100%)',
+              background: 'linear-gradient(90deg, #477BFF 0%, #0048C1 100%)',
               width: `${valuePercentage}%`,
               height: '14px',
               borderRadius: '22px',
@@ -49,7 +59,8 @@ const SummaryCard = ({ report, student }) => {
 
   return (
     <div>
-      <Card
+      <Sheet
+        isFullWidth
         sx={{
           padding: '24px',
           paddingBottom: '16px',
@@ -64,14 +75,20 @@ const SummaryCard = ({ report, student }) => {
             variant="body1"
             sx={{
               fontWeight: 600,
-              color: '#FE6C89',
+              color: '#477BFF',
             }}
           >
-            {student.name}'s Diagnose
+            Diagnose for the topic &quot;{lecture?.topic}&quot;
           </Typography>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+          }}
+        >
           <div
             style={{
               display: 'flex',
@@ -79,7 +96,6 @@ const SummaryCard = ({ report, student }) => {
               width: '120px',
               textAlign: 'center',
               marginRight: '16px',
-              marginTop: '8px',
             }}
           >
             <div>
@@ -88,7 +104,7 @@ const SummaryCard = ({ report, student }) => {
               </Typography>
             </div>
             <Typography display="inline" variant="h2">
-              {report?.totalScore}
+              {report?.overallScore.value}
               <Typography variant="body3" display="inline">
                 /10
               </Typography>
@@ -101,14 +117,33 @@ const SummaryCard = ({ report, student }) => {
               width: '100%',
             }}
           >
-            {renderDataRow('Understanding', report['understanding']?.score)}
-            {renderDataRow('Achievement', report['ahievement']?.score)}
-            {renderDataRow('Satisfaction', report['satisfaction']?.score)}
-            {renderDataRow('Attitude', report['attitude']?.score)}
+            {renderDataRow('Content', report['contentQuality']?.score)}
+            {renderDataRow('Delivery', report['delivery']?.score)}
           </div>
         </div>
-      </Card>
+        <br />
+        <Typography variant="h4" fontWeight={500}>
+          Improvement Suggestions
+        </Typography>
+        <List>
+          {report.improvements.suggestions.map((item, index) => {
+            return (
+              <ListItem key={index}>
+                <ListItemIcon
+                  sx={{ minWidth: '32px', alignSelf: 'flex-start' }}
+                >
+                  <CheckIcon />
+                </ListItemIcon>
+                <StyledListItemText
+                  primary={item}
+                  sx={{ color: '#3c3c43eb', fontSize: '14px' }}
+                />
+              </ListItem>
+            );
+          })}
+        </List>
+      </Sheet>
     </div>
   );
 };
-export default SummaryCard;
+export default LectureReport;
