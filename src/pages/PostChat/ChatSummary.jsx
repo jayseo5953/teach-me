@@ -32,6 +32,7 @@ const ChatSummary = () => {
   const navigate = useNavigate();
   const { studentContext } = useStudent();
   const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(true);
   const [currentLecture, setCurrentLecture] = useState(state.lectures[0]);
 
   const [students, setStudents] = useState(state.students || []);
@@ -45,15 +46,10 @@ const ChatSummary = () => {
     lectureReports[0]
   );
 
-  useEffect(() => {
-    //data is already loaded from location state
-    if (currentLectureReport) {
-      return setIsLoading(false);
-    }
-
-    (async () => {
+  const fetchData = async () => {
+    try {
+      setFetchError(false);
       setIsLoading(true);
-
       const promises = [
         getOverallReport(state?.lectures),
         getStudents(),
@@ -62,6 +58,7 @@ const ChatSummary = () => {
       const [overviewReport, students, ...lectureReports] = await Promise.all(
         promises
       );
+
       const filteredStudents = students.filter(
         (s) => s.id !== studentContext?.id
       );
@@ -70,8 +67,31 @@ const ChatSummary = () => {
       setCurrentLectureReport(lectureReports[0]);
       setOverviewReport(overviewReport);
       setStudents(filteredStudents);
+
+      navigate('.', {
+        state: {
+          ...location.state,
+          students,
+          overviewReport,
+          lectureReports,
+          currentLectureReport,
+        },
+        replace: true,
+      });
+    } catch (e) {
+      setFetchError(true);
+    } finally {
       setIsLoading(false);
-    })();
+    }
+  };
+
+  useEffect(() => {
+    //data is already loaded from location state
+    if (currentLectureReport) {
+      return setIsLoading(false);
+    } else {
+      fetchData();
+    }
   }, []);
 
   const handleSelectLecture = async (index) => {
@@ -79,27 +99,55 @@ const ChatSummary = () => {
     setCurrentLectureReport(lectureReports[index]);
   };
 
-  return isLoading ? (
-    <Box
-      height={'70vh'}
-      display={'flex'}
-      flexDirection={'column'}
-      justifyContent={'center'}
-    >
-      <div>
-        <LoadingSpinner />
-        <div
-          style={{
-            textAlign: 'center',
-          }}
-        >
-          <Typography variant="h4" fontWeight={500}>
-            Generating final report...
-          </Typography>
+  if (isLoading) {
+    return (
+      <Box
+        height={'70vh'}
+        display={'flex'}
+        flexDirection={'column'}
+        justifyContent={'center'}
+      >
+        <div>
+          <LoadingSpinner />
+          <div
+            style={{
+              textAlign: 'center',
+            }}
+          >
+            <Typography variant="h4" fontWeight={500}>
+              Generating final report...
+            </Typography>
+          </div>
         </div>
-      </div>
-    </Box>
-  ) : (
+      </Box>
+    );
+  }
+
+  if (fetchError) {
+    return (
+      <Box
+        height={'70vh'}
+        display={'flex'}
+        flexDirection={'column'}
+        justifyContent={'center'}
+      >
+        <div>
+          <div
+            style={{
+              textAlign: 'center',
+            }}
+          >
+            <Typography variant="h4" fontWeight={500}>
+              Sorry, something went wrong.
+            </Typography>
+            <Button onClick={fetchData}>Try again</Button>
+          </div>
+        </div>
+      </Box>
+    );
+  }
+
+  return (
     <div>
       <br />
       <div
@@ -200,19 +248,7 @@ const ChatSummary = () => {
           />
         </div>
         <div style={{ marginTop: '24px' }}>
-          <ReviewCard
-            onClick={() =>
-              navigate('review', {
-                state: {
-                  ...state,
-                  students,
-                  overviewReport,
-                  lectureReports,
-                  currentLectureReport,
-                },
-              })
-            }
-          />
+          <ReviewCard onClick={() => navigate('review', { state })} />
         </div>
         <br />
         <Link fullWidth variant="contained" to="/dashboard">
