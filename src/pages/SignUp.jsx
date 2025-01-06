@@ -78,7 +78,12 @@ const SignUp = () => {
       await signup(formData.get('email'), formData.get('password'));
       navigate('/dashboard');
     } catch (e) {
-      setError(e.message);
+      let message = e.message;
+      if (e.response?.status === 400) {
+        message =
+          'This email is already registered. Please log in or use a different email to sign up.';
+      }
+      setError(message);
     } finally {
       setIsLoading(false);
     }
