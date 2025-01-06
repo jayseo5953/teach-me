@@ -87,6 +87,13 @@ const ChatInput = ({
       setText('');
     }
   };
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handleSubmit(event);
+    }
+  };
   return (
     <StyledSheet
       shadowDepth="soft"
@@ -105,6 +112,7 @@ const ChatInput = ({
           value={text}
           disabled={isLoading}
           onChange={(e) => setText(e.target.value)}
+          onKeyDown={handleKeyPress}
           inputProps={{
             maxLength,
           }}
