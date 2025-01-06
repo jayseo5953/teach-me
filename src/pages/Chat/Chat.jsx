@@ -330,8 +330,8 @@ const Chat = () => {
               }}
             >
               <Button
+                variant="contained"
                 onClick={async (e) => await handleClick(e)}
-                variant="primary"
                 startIcon={<HelpOutlineIcon />}
                 sx={{ backgroundColor: 'primary.95', color: 'primary.dark' }}
                 style={{ padding: '4px 12px' }}
