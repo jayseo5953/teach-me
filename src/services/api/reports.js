@@ -9,3 +9,10 @@ export async function getOverallReport(lectureList) {
 
   return response.data;
 }
+export async function getLectureRport(lecture) {
+  const response = await api.post(`${END_POINT}/lecture`, {
+    lecture,
+  });
+
+  return response.data;
+}
