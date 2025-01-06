@@ -1,6 +1,7 @@
-import { Card, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
+import Sheet from './Sheet';
 
-const SummaryCard = ({ report, student }) => {
+const OverallLectureReport = ({ report, student }) => {
   const renderDataRow = (key, value = 1) => {
     const valuePercentage = value * 10;
     return (
@@ -49,7 +50,8 @@ const SummaryCard = ({ report, student }) => {
 
   return (
     <div>
-      <Card
+      <Sheet
+        isFullWidth
         sx={{
           padding: '24px',
           paddingBottom: '16px',
@@ -68,11 +70,17 @@ const SummaryCard = ({ report, student }) => {
               color: '#FE6C89',
             }}
           >
-            {student.name}'s Diagnose
+            {student.name}&apos;s Diagnose
           </Typography>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+          }}
+        >
           <div
             style={{
               display: 'flex',
@@ -80,7 +88,6 @@ const SummaryCard = ({ report, student }) => {
               width: '120px',
               textAlign: 'center',
               marginRight: '16px',
-              marginTop: '8px',
             }}
           >
             <div>
@@ -108,8 +115,8 @@ const SummaryCard = ({ report, student }) => {
             {renderDataRow('Attitude', report['attitude']?.score)}
           </div>
         </div>
-      </Card>
+      </Sheet>
     </div>
   );
 };
-export default SummaryCard;
+export default OverallLectureReport;

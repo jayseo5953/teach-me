@@ -1,4 +1,5 @@
-import { Card, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
+import Sheet from './ui/Sheet';
 
 const AnswerCorrectnessCard = ({ percentage = 70 }) => {
   // Layout for donut chart + text on the right
@@ -26,7 +27,8 @@ const AnswerCorrectnessCard = ({ percentage = 70 }) => {
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   return (
-    <Card
+    <Sheet
+      isFullWidth
       sx={{
         backgroundColor: '#FFF',
         height: '200px',
@@ -89,7 +91,7 @@ const AnswerCorrectnessCard = ({ percentage = 70 }) => {
         {/* Right-hand label */}
         <div style={labelStyle}>Correct answers {percentage}%</div>
       </div>
-    </Card>
+    </Sheet>
   );
 };
 
