@@ -110,9 +110,9 @@ const OverallLectureReport = ({ report, student }) => {
             }}
           >
             {renderDataRow('Understanding', report['understanding']?.score)}
-            {renderDataRow('Achievement', report['ahievement']?.score)}
+            {renderDataRow('Achievement', report['achievement']?.score)}
             {renderDataRow('Satisfaction', report['satisfaction']?.score)}
-            {renderDataRow('Attitude', report['attitude']?.score)}
+            {renderDataRow('Enthusiasm', report['enthusiasm']?.score)}
           </div>
         </div>
       </Sheet>
