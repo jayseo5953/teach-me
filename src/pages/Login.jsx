@@ -76,7 +76,6 @@ const Login = () => {
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: handleGoogleAuthResponse,
     onError: handleGoogleAuthError,
-    flow: 'implicit',
   });
 
   return user ? (
