@@ -65,7 +65,7 @@ const Login = () => {
   const handleGoogleAuthResponse = async (response) => {
     setError(null);
     const result = await googleAuth(response.access_token);
-    setSessionUser(result.data);
+    setSessionUser({ ...result.data, isOAuth: true });
     navigate('/dashboard');
   };
   const handleGoogleAuthError = async (e) => {
