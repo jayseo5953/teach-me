@@ -139,7 +139,6 @@ function Dashboard() {
           >
             <PillButton
               label="Change"
-              white
               onClick={() => navigate('/select-student')}
             />
           </div>

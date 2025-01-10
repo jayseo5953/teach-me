@@ -1,5 +1,5 @@
 import Button from '@/components/ui/Button';
-import { TextField } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 import { useAuth } from '@/contexts/AuthContext';
 import { parseError } from '@/utils/parseError';
 import { useState } from 'react';
@@ -8,6 +8,9 @@ import styled from 'styled-components';
 import Typography from '@mui/material/Typography';
 import { Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { googleAuth } from '@/services/api/auth';
+import { GoogleLogin } from '@react-oauth/google';
+import Link from '@/components/ui/Link';
 
 const ErrorMessage = styled.div`
   margin-bottom: 8px;
@@ -42,7 +45,7 @@ const SignUpTextContainer = styled.div`
 const Login = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { login, user } = useAuth();
+  const { login, user, setSessionUser } = useAuth();
   const navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -57,6 +60,17 @@ const Login = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleGoogleIdentitySuccess = async ({ credential }) => {
+    setError(null);
+    const result = await googleAuth(credential);
+    setSessionUser({ ...result.data, isOAuth: true });
+    navigate('/dashboard');
+  };
+  const handleGoogleIdentityError = async (e) => {
+    console.error(e.message);
+    setError('Failed to login through Google. Please try again.');
   };
 
   return user ? (
@@ -101,19 +115,21 @@ const Login = () => {
           Login
         </Button>
       </form>
+
       <SignUpTextContainer>
-        <Typography variant="body2">
-          Don't Have an Account Yet?
-          <Typography
-            variant="body2"
-            color="primary"
-            onClick={() => navigate('/sign-up')}
-            sx={{ cursor: 'pointer' }}
-          >
-            Create Account
-          </Typography>
-        </Typography>
+        <Typography variant="body2">Don&apos;t Have an Account Yet?</Typography>
+        <Link color="primary" to={'/sign-up'}>
+          Create Account
+        </Link>
       </SignUpTextContainer>
+      <br />
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <GoogleLogin
+          onSuccess={handleGoogleIdentitySuccess}
+          onError={handleGoogleIdentityError}
+          useOneTap
+        />
+      </Box>
     </Container>
   );
 };

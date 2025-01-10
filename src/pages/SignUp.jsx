@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import Typography from '@mui/material/Typography';
 import { Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import Link from '@/components/ui/Link';
 
 const StyledButton = styled(Button)`
   margin-top: 8px;
@@ -142,17 +143,10 @@ const SignUp = () => {
         </StyledButton>
       </form>
       <SignUpTextContainer>
-        <Typography variant="body2">
-          Already have an account?
-          <Typography
-            variant="body2"
-            color="primary"
-            onClick={() => navigate('/login')}
-            sx={{ cursor: 'pointer' }}
-          >
-            Login
-          </Typography>
-        </Typography>
+        <Typography variant="body2">Already have an account?</Typography>
+        <Link color="primary" to="/login">
+          Login
+        </Link>
       </SignUpTextContainer>
     </Container>
   );
