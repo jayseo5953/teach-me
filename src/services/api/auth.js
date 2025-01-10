@@ -9,3 +9,7 @@ export async function login(email, password) {
 export async function signup(email, password) {
   return api.post([END_POINT, 'register'].join('/'), { email, password });
 }
+
+export async function googleAuth(accessToken) {
+  return api.post([END_POINT, 'google'].join('/'), { accessToken });
+}

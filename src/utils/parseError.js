@@ -1,3 +1,6 @@
 export function parseError(e) {
-  return e.response?.data?.error || e.message;
+  let message =
+    e.response?.data?.message || e.response?.data?.error || e.message;
+  message = message.replaceAll('_', ' ');
+  return message;
 }

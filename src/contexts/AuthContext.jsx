@@ -4,6 +4,7 @@ import {
   login as loginApiCall,
   signup as signupApiCall,
 } from '@/services/api/auth';
+import { googleLogout } from '@react-oauth/google';
 const AuthContext = createContext();
 
 const AUTH_KEY = 'auth';
@@ -21,17 +22,16 @@ const getUserFromLocalStorage = () => {
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(getUserFromLocalStorage());
 
+  const setSessionUser = (userToSet) => {
+    setUser(userToSet);
+    localStorage.setItem(AUTH_KEY, JSON.stringify(userToSet));
+    return userToSet;
+  };
+
   const login = async (email, password) => {
     const res = await loginApiCall(email, password);
-
     const userToSet = res.data;
-
-    if (userToSet) {
-      setUser(userToSet);
-      localStorage.setItem(AUTH_KEY, JSON.stringify(userToSet));
-
-      return userToSet;
-    }
+    return setSessionUser(userToSet);
   };
 
   const signup = async (email, password) => {
@@ -40,12 +40,17 @@ const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    if (user.authProvider === 'GOOGLE') {
+      googleLogout();
+    }
     setUser(null);
     localStorage.removeItem(AUTH_KEY);
   };
 
   return (
-    <AuthContext.Provider value={{ user, signup, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, signup, login, logout, setSessionUser }}
+    >
       {children}
     </AuthContext.Provider>
   );
