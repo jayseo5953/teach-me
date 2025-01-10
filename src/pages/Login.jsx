@@ -18,6 +18,11 @@ const ErrorMessage = styled.div`
 
   color: ${({ theme }) => theme.palette.error};
 `;
+
+const OauthMessage = styled(ErrorMessage)`
+  margin-top: 8px;
+`;
+
 const HeaderText = styled.h4`
   height: 73px;
 `;
@@ -44,6 +49,7 @@ const SignUpTextContainer = styled.div`
 
 const Login = () => {
   const [error, setError] = useState(null);
+  const [oauthError, setOAuthError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { login, user, setSessionUser } = useAuth();
   const navigate = useNavigate();
@@ -63,14 +69,22 @@ const Login = () => {
   };
 
   const handleGoogleAuthResponse = async (response) => {
-    setError(null);
-    const result = await googleAuth(response.access_token);
-    setSessionUser({ ...result.data, isOAuth: true });
-    navigate('/dashboard');
+    setOAuthError(null);
+    try {
+      const result = await googleAuth(response.access_token);
+      setSessionUser({ ...result.data, isOAuth: true });
+      navigate('/dashboard');
+    } catch (e) {
+      setOAuthError(
+        'Failed to login through Google. Please try again or try other authentication methods.'
+      );
+    }
   };
   const handleGoogleAuthError = async (e) => {
     console.error(e.message);
-    setError('Failed to login through Google. Please try again.');
+    setOAuthError(
+      'Failed to login through Google. Please try again or try other authentication methods.'
+    );
   };
 
   const handleGoogleLogin = useGoogleLogin({
@@ -108,6 +122,14 @@ const Login = () => {
         >
           Continue with Google
         </Button>
+
+        {oauthError && (
+          <OauthMessage>
+            <Typography variant="caption1" color="error">
+              {oauthError}
+            </Typography>
+          </OauthMessage>
+        )}
       </Box>
 
       <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
