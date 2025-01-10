@@ -40,7 +40,7 @@ const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    if (user.isOAuth) {
+    if (user.authProvider === 'google') {
       googleLogout();
     }
     setUser(null);

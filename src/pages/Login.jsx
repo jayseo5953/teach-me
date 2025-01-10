@@ -1,5 +1,5 @@
 import Button from '@/components/ui/Button';
-import { Box, TextField } from '@mui/material';
+import { Box, Divider, TextField } from '@mui/material';
 import { useAuth } from '@/contexts/AuthContext';
 import { parseError } from '@/utils/parseError';
 import { useState } from 'react';
@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import { Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { googleAuth } from '@/services/api/auth';
-import { GoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin } from '@react-oauth/google';
 import Link from '@/components/ui/Link';
 
 const ErrorMessage = styled.div`
@@ -62,22 +62,67 @@ const Login = () => {
     }
   };
 
-  const handleGoogleIdentitySuccess = async ({ credential }) => {
+  const handleGoogleAuthResponse = async (response) => {
     setError(null);
-    const result = await googleAuth(credential);
-    setSessionUser({ ...result.data, isOAuth: true });
+    const result = await googleAuth(response.access_token);
+    setSessionUser(result.data);
     navigate('/dashboard');
   };
-  const handleGoogleIdentityError = async (e) => {
+  const handleGoogleAuthError = async (e) => {
     console.error(e.message);
     setError('Failed to login through Google. Please try again.');
   };
+
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: handleGoogleAuthResponse,
+    onError: handleGoogleAuthError,
+    flow: 'implicit',
+  });
 
   return user ? (
     <Navigate to="/dashboard" replace />
   ) : (
     <Container>
       <HeaderText></HeaderText>
+
+      <Box
+        sx={{
+          margin: 'auto',
+          marginBottom: '24px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Button
+          fullWidth
+          onClick={handleGoogleLogin}
+          startIcon={
+            <Box component="img" src="/assets/google-logo.svg" alt="Logo" />
+          }
+          sx={{
+            color: '#0000008A',
+            backgroundColor: 'common.white',
+            border: '1px solid #0000001A',
+          }}
+        >
+          Continue with Google
+        </Button>
+      </Box>
+
+      <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+        <Divider
+          sx={{ flex: 1, borderStyle: 'dotted', borderColor: 'text.secondary' }}
+        />
+        <Typography variant="body" sx={{ margin: '8px' }}>
+          OR
+        </Typography>
+        <Divider
+          sx={{ flex: 1, borderStyle: 'dotted', borderColor: 'text.secondary' }}
+        />
+      </Box>
+
       <LoginText>Login</LoginText>
 
       <form onSubmit={handleLogin}>
@@ -122,14 +167,6 @@ const Login = () => {
           Create Account
         </Link>
       </SignUpTextContainer>
-      <br />
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <GoogleLogin
-          onSuccess={handleGoogleIdentitySuccess}
-          onError={handleGoogleIdentityError}
-          useOneTap
-        />
-      </Box>
     </Container>
   );
 };
