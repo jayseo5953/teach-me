@@ -13,8 +13,8 @@ import ConfirmationModal from '@/components/ConfirmationModal';
 import Button from '@/components/ui/Button';
 import { useStudent } from '@/contexts/StudentContext';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { getHint } from '../../services/api/hints';
-import LoadingSpinner from '../../components/ui/LoadingSpinner';
+import { getHint } from '@/services/api/hints';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import FinishedChatModal from '@/components/FinishedChatModal';
 
 const headerHeight = '170px';

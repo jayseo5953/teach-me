@@ -6,11 +6,11 @@ import Root from '@/pages/Root';
 import Dashboard from '@/pages/Dashboard';
 import SelectTopic from '@/pages/PreChat/SelectTopic';
 import Chat from '@/pages/Chat/Chat';
-import ChatSummary from './pages/PostChat/ChatSummary';
-import HideParentRoute from './layouts/HideParentRoute';
-import SignUp from './pages/SignUp';
-import SelectStudent from './pages/SelectStudent';
-import Review from './pages/PostChat/Review';
+import ChatSummary from '@/pages/PostChat/ChatSummary';
+import HideParentRoute from '@/layouts/HideParentRoute';
+import SignUp from '@/pages/SignUp';
+import SelectStudent from '@/pages/SelectStudent';
+import Review from '@/pages/PostChat/Review';
 
 const router = createBrowserRouter([
   {

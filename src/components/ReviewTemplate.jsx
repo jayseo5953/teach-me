@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material';
 import { green, pink } from '@mui/material/colors';
-import Sheet from './Sheet';
+import Sheet from '@/components/ui/Sheet';
 import styled from 'styled-components';
 
 const StyledSheet = styled(Sheet)`

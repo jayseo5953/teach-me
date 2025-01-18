@@ -1,4 +1,4 @@
-import Sheet from './Sheet';
+import Sheet from '@/components/ui/Sheet';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 export default function ReviewCard({ onClick }) {

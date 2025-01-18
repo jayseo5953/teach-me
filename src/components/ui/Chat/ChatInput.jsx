@@ -2,9 +2,9 @@ import { TextField } from '@mui/material';
 import styled, { css } from 'styled-components';
 import { InputAdornment, IconButton } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import Sheet from '../Sheet';
+import Sheet from '@/components/ui/Sheet';
 import { useState } from 'react';
-import LoadingSpinner from '../LoadingSpinner';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 const StyledSheet = styled(Sheet)`
   && {

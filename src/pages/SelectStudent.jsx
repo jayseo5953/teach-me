@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import { Box, Container, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import StudentCard from '@/components/ui/StudentCard';
+import StudentCard from '@/components/StudentCard';
 import { useStudent } from '@/contexts/StudentContext';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 

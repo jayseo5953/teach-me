@@ -1,19 +1,19 @@
 import Link from '@/components/ui/Link';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useStudent } from '@/contexts/StudentContext';
-import ChatBubble from '../../components/ui/Chat/ChatBubble';
+import ChatBubble from '@/components/ui/Chat/ChatBubble';
 import { Box, Typography } from '@mui/material';
-import OverallLectureReport from '../../components/ui/OverallLectureReport';
+import OverallLectureReport from '@/components/OverallLectureReport';
 import { useEffect, useState } from 'react';
-import { getLectureRport, getOverallReport } from '../../services/api/reports';
-import LoadingSpinner from '../../components/ui/LoadingSpinner';
-import { getStudents } from '../../services/api/students';
-import SecondaryStudentCard from '../../components/ui/SecondaryStudentCard';
-import LectureReport from '@/components/ui/LectureReport';
+import { getLectureRport, getOverallReport } from '@/services/api/reports';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { getStudents } from '@/services/api/students';
+import SecondaryStudentCard from '@/components/SecondaryStudentCard';
+import LectureReport from '@/components/LectureReport';
 import Button from '@/components/ui/Button';
 import styled from 'styled-components';
-import AnswerCorrectnessCard from '../../components/AnswerCorrectnessCard';
-import ReviewCard from '../../components/ui/ReviewCard';
+import AnswerCorrectnessCard from '@/components/AnswerCorrectnessCard';
+import ReviewCard from '@/components/ReviewCard';
 
 const Pill = styled(Button)`
   & {
@@ -78,7 +78,7 @@ const ChatSummary = () => {
         },
         replace: true,
       });
-    } catch (e) {
+    } catch {
       setFetchError(true);
     } finally {
       setIsLoading(false);

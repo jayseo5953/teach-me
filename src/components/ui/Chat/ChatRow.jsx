@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Avatar from '@/components/ui/Chat/Avatar';
-import ChatBubble from './ChatBubble';
+import ChatBubble from '@/components/ui/Chat/ChatBubble';
 import { useStudent } from '@/contexts/StudentContext';
 
 const ChatRowContainer = styled.div`
