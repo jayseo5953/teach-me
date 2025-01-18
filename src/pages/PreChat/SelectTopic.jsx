@@ -36,7 +36,7 @@ const ViewMoreButton = styled(Button)`
   padding: 0;
 `;
 
-const maxTopicNumbers = 3;
+const MaxNumberOfTopics = 3;
 
 const SelectTopic = () => {
   const [selectedTopics, setSelectedTopcis] = useState([]);
@@ -53,7 +53,7 @@ const SelectTopic = () => {
     if (topicToSet.includes(topic)) {
       topicToSet = topicToSet.filter((t) => t !== topic);
     } else {
-      if (topicToSet.length >= maxTopicNumbers) {
+      if (topicToSet.length >= MaxNumberOfTopics) {
         topicToSet = topicToSet.slice(1);
       }
       topicToSet = [...topicToSet, topic];
