@@ -9,9 +9,9 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 const SelectStudent = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const { getStudents, studentContext, setStudent } = useStudent();
+  const { getStudents, student, setStudent } = useStudent();
   const [students, setStudents] = useState([]);
-  const [selectedStudent, setSelectedStudent] = useState(studentContext);
+  const [selectedStudent, setSelectedStudent] = useState(student);
 
   const navigate = useNavigate();
 

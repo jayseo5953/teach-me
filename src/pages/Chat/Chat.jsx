@@ -99,7 +99,7 @@ const Chat = () => {
   const [showFinished, setShowFinished] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { studentContext } = useStudent();
+  const { student } = useStudent();
   const [anchorEl, setAnchorEl] = useState(null);
   const [hint, setHint] = useState('');
   const [hintLoading, setHintLoading] = useState(true);
@@ -208,7 +208,7 @@ const Chat = () => {
             subject,
             topic: remainingTopics[1],
             userId: user.id,
-            studentId: studentContext.id,
+            studentId: student.id,
           });
 
           setCurrentLecture(lecture);

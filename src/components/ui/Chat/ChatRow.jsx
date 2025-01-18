@@ -16,8 +16,8 @@ const StyledAvatar = styled(Avatar)`
 `;
 
 const ChatRow = ({ avatarSize, avatarVariant, isSender, message }) => {
-  const { studentContext } = useStudent();
-  const avatarSrc = studentContext?.image;
+  const { student } = useStudent();
+  const avatarSrc = student?.image;
   return (
     <ChatRowContainer $isSender={isSender}>
       {!isSender && (

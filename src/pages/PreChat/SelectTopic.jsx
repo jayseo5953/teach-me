@@ -45,7 +45,7 @@ const SelectTopic = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const { subject, topics } = state || {};
-  const { studentContext } = useStudent();
+  const { student } = useStudent();
   const { user } = useAuth();
 
   const handleSelectTopic = (topic) => {
@@ -75,7 +75,7 @@ const SelectTopic = () => {
     mutation.mutate({
       subject,
       topic,
-      studentId: studentContext?.id,
+      studentId: student?.id,
       userId: user?.id,
     });
   };
