@@ -74,7 +74,7 @@ const Login = () => {
       const result = await googleAuth(response.access_token);
       setSessionUser({ ...result.data, isOAuth: true });
       navigate('/dashboard');
-    } catch (e) {
+    } catch {
       setOAuthError(
         'Failed to login through Google. Please try again or try other authentication methods.'
       );

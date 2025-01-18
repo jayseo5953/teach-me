@@ -32,7 +32,7 @@ const ReviewTemplate = ({ lecture, report }) => {
                   <div style={{ marginTop: '8px' }}>
                     <Typography>
                       <Typography variant="body1" fontWeight={600}>
-                        🧑‍🎓 Student's question:
+                        🧑‍🎓 Student&apos;s question:
                       </Typography>
                       <Typography
                         variant="body"
@@ -45,7 +45,7 @@ const ReviewTemplate = ({ lecture, report }) => {
 
                   <div style={{ marginTop: '8px' }}>
                     <Typography variant="body1" fontWeight={600}>
-                      🧑‍🏫 Teacher's answer:
+                      🧑‍🏫 Teacher&apos;s answer:
                     </Typography>
                     <Typography
                       variant="body"
@@ -89,7 +89,7 @@ const ReviewTemplate = ({ lecture, report }) => {
                   <div style={{ marginTop: '8px' }}>
                     <Typography>
                       <Typography variant="body1" fontWeight={600}>
-                        🧑‍🎓 Student's question:
+                        🧑‍🎓 Student&apos;s question:
                       </Typography>
                       <Typography
                         variant="body"
@@ -102,7 +102,7 @@ const ReviewTemplate = ({ lecture, report }) => {
 
                   <div style={{ marginTop: '8px' }}>
                     <Typography variant="body1" fontWeight={600}>
-                      🧑‍🏫 Teacher's answer:
+                      🧑‍🏫 Teacher&apos;s answer:
                     </Typography>
                     <Typography
                       variant="body"
