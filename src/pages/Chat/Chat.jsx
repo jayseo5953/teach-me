@@ -84,6 +84,7 @@ const StyledPopover = styled(Popover)`
 
 const requiredSatisfactionCount = 2;
 
+// TODO: use masked chat id in the url so that user can pick up chat on another session
 const Chat = () => {
   const { state } = useLocation();
   const { selectedTopics, lecture, subject } = state || {};
