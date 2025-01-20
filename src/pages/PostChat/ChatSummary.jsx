@@ -15,6 +15,11 @@ import styled from 'styled-components';
 import AnswerCorrectnessCard from '@/components/AnswerCorrectnessCard';
 import ReviewCard from '@/components/ReviewCard';
 import { useQueries } from '@tanstack/react-query';
+import {
+  SpacedBox,
+  CenteredBox,
+  CenteredSpacedBox,
+} from '@/components/styled/Boxes';
 
 const Pill = styled(Button)`
   & {
@@ -25,20 +30,6 @@ const Pill = styled(Button)`
     white-space: nowrap;
     margin-bottom: 4px;
   }
-`;
-
-const Section = styled(Box)`
-  margin-top: 24px;
-`;
-
-const CenteredBox = styled(Box)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const CenteredSection = styled(CenteredBox)`
-  margin-top: 24px;
 `;
 
 const ChatSummary = () => {
@@ -117,7 +108,7 @@ const ChatSummary = () => {
 
   return (
     <div>
-      <Section display={'flex'} flexDirection={'row'} width={'100%'}>
+      <SpacedBox display={'flex'} flexDirection={'row'} width={'100%'}>
         <img
           src={student?.image}
           style={{
@@ -130,20 +121,20 @@ const ChatSummary = () => {
         <ChatBubble
           message={`I learned a lot about ${state.subject}! Thanks! ❤️`}
         />
-      </Section>
+      </SpacedBox>
 
-      <Section>
+      <SpacedBox>
         <OverallLectureReport report={overviewReport} student={student} />
-      </Section>
-      <Section>
+      </SpacedBox>
+      <SpacedBox>
         <LectureReport
           lecture={currentLecture}
           report={currentLectureReport}
           student={student}
         />
-      </Section>
+      </SpacedBox>
 
-      <CenteredSection flexDirection={'column'} style={{ marginTop: '8px' }}>
+      <CenteredSpacedBox flexDirection={'column'} style={{ marginTop: '8px' }}>
         <Typography variant="caption1" color="primary">
           Select a topic to view a topic report
         </Typography>
@@ -170,34 +161,34 @@ const ChatSummary = () => {
             </Pill>
           ))}
         </Box>
-      </CenteredSection>
+      </CenteredSpacedBox>
 
-      <Section>
+      <SpacedBox>
         <Typography variant="h3">Try with other students</Typography>
         <Box marginTop={'8px'} display={'flex'} flexDirection={'row'}>
           {students.map((student) => (
             <SecondaryStudentCard key={student.id} student={student} />
           ))}
         </Box>
-      </Section>
+      </SpacedBox>
 
-      <Section>
+      <SpacedBox>
         <Typography variant="h3" marginBottom="8px">
           Summary
         </Typography>
         <AnswerCorrectnessCard
           percentage={overviewReport?.correctAnswerRate?.rate}
         />
-      </Section>
-      <Section>
+      </SpacedBox>
+      <SpacedBox>
         <ReviewCard onClick={() => navigate('review', { state })} />
-      </Section>
+      </SpacedBox>
 
-      <Section>
+      <SpacedBox>
         <Link fullWidth variant="contained" to="/dashboard">
           Return to Dashboard
         </Link>
-      </Section>
+      </SpacedBox>
       <br />
     </div>
   );
