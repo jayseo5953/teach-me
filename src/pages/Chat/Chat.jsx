@@ -2,20 +2,18 @@ import ChatInput from '@/components/ui/Chat/ChatInput';
 import ChatRow from '@/components/ui/Chat/ChatRow';
 import { createLecture, getLectureMessages } from '@/services/api/lectures';
 import LinearProgress from '@mui/material/LinearProgress';
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { Box, Chip, IconButton, Popover, Typography } from '@mui/material';
+import { Box, Chip, IconButton, Typography } from '@mui/material';
 import { ArrowDownward, CheckCircle } from '@mui/icons-material';
 import { useAuth } from '@/contexts/AuthContext';
 import ConfirmationModal from '@/components/ConfirmationModal';
 import Button from '@/components/ui/Button';
 import { useStudent } from '@/contexts/StudentContext';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { getHint } from '@/services/api/hints';
-import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import FinishedChatModal from '@/components/FinishedChatModal';
 import useSocket from '@/hooks/useSocket';
+import HintPill from '@/components/HintPill';
 
 const headerHeight = '170px';
 
@@ -75,13 +73,6 @@ const ScrollToBottomButton = styled(IconButton)`
   }
 `;
 
-const StyledPopover = styled(Popover)`
-  && .MuiPaper-root {
-    border-radius: 32px;
-    margin-right: 24px;
-  }
-`;
-
 const RequiredSatisfactionCount = 2;
 const ChatWebSocketId = 'messageAck';
 
@@ -97,9 +88,6 @@ const Chat = () => {
   const [remainingTopics, setRemainingTopics] = useState(selectedTopics);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showFinished, setShowFinished] = useState(false);
-  const [hintEl, setHintEl] = useState(null);
-  const [hint, setHint] = useState('');
-  const [hintLoading, setHintLoading] = useState(true);
 
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -119,6 +107,11 @@ const Chat = () => {
     text: topic,
     finished: !remainingTopics.includes(topic),
   }));
+
+  const lastQuestion = useMemo(() => {
+    const qs = incomingMessages.filter((m) => m.sender === 'STUDENT');
+    return qs[qs.length - 1];
+  }, [incomingMessages]);
 
   /* Handlers */
   const handleScroll = () => {
@@ -142,21 +135,6 @@ const Chat = () => {
       };
       socket.emit('messageSubmitted', payload);
     }
-  };
-
-  const handleOpenHint = async (event) => {
-    setHintEl(event.currentTarget);
-    setHintLoading(true);
-    const questions = incomingMessages.filter((m) => m.sender === 'STUDENT');
-    const lastQuestion = questions[questions.length - 1];
-
-    const hint = await getHint(lastQuestion.content);
-
-    setHint(hint);
-    setHintLoading(false);
-  };
-  const handleHintClose = () => {
-    setHintEl(null);
   };
 
   const proceedToNextTopic = useCallback(async () => {
@@ -295,35 +273,7 @@ const Chat = () => {
           >
             <Typography variant="h3">Topic: {currentTopic}</Typography>
             <Box display={'flex'} alignItems={'center'}>
-              <Button
-                variant="contained"
-                onClick={handleOpenHint}
-                startIcon={<HelpOutlineIcon />}
-                sx={{ backgroundColor: 'primary.95', color: 'primary.dark' }}
-                style={{ padding: '4px 12px' }}
-              >
-                Hint
-              </Button>
-              <StyledPopover
-                id={hintEl && 'simple-popover'}
-                open={!!hintEl}
-                anchorEl={hintEl}
-                onClose={handleHintClose}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
-                }}
-              >
-                <Box padding={'24px'} backgroundColor={'#fff'}>
-                  {hintLoading ? (
-                    <LoadingSpinner />
-                  ) : (
-                    <Box>
-                      <Typography>{hint}</Typography>
-                    </Box>
-                  )}
-                </Box>
-              </StyledPopover>
+              {lastQuestion && <HintPill question={lastQuestion} />}
             </Box>
           </Box>
         </div>
