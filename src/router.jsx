@@ -1,13 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Link from '@/components/ui/Link';
 import Login from '@/pages/Login';
-import ProtectedRoute from '@/layouts/ProtectedRoute';
+import ProtectedRoute from '@/pages/WrapperRoutes/ProtectedRoute';
 import Root from '@/pages/Root';
 import Dashboard from '@/pages/Dashboard';
 import SelectTopic from '@/pages/PreChat/SelectTopic';
 import Chat from '@/pages/Chat/Chat';
 import ChatSummary from '@/pages/PostChat/ChatSummary';
-import HideParentRoute from '@/layouts/HideParentRoute';
+import HideParentRoute from '@/pages/WrapperRoutes/HideParentRoute';
 import SignUp from '@/pages/SignUp';
 import SelectStudent from '@/pages/SelectStudent';
 import Review from '@/pages/PostChat/Review';
