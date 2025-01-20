@@ -9,7 +9,7 @@ const StyledModal = styled(Modal)`
 `;
 
 import { Box, Typography } from '@mui/material';
-import Button from './ui/Button';
+import Button from '@/components/ui/Button';
 
 const FinishedChatModal = ({ subject, onConfirm }) => {
   return (

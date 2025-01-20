@@ -1,19 +1,19 @@
 import Link from '@/components/ui/Link';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useStudent } from '@/contexts/StudentContext';
-import ChatBubble from '../../components/ui/Chat/ChatBubble';
+import ChatBubble from '@/components/ui/Chat/ChatBubble';
 import { Box, Typography } from '@mui/material';
-import OverallLectureReport from '../../components/ui/OverallLectureReport';
+import OverallLectureReport from '@/components/OverallLectureReport';
 import { useEffect, useState } from 'react';
-import { getLectureRport, getOverallReport } from '../../services/api/reports';
-import LoadingSpinner from '../../components/ui/LoadingSpinner';
-import { getStudents } from '../../services/api/students';
-import SecondaryStudentCard from '../../components/ui/SecondaryStudentCard';
-import LectureReport from '@/components/ui/LectureReport';
+import { getLectureRport, getOverallReport } from '@/services/api/reports';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { getStudents } from '@/services/api/students';
+import SecondaryStudentCard from '@/components/SecondaryStudentCard';
+import LectureReport from '@/components/LectureReport';
 import Button from '@/components/ui/Button';
 import styled from 'styled-components';
-import AnswerCorrectnessCard from '../../components/AnswerCorrectnessCard';
-import ReviewCard from '../../components/ui/ReviewCard';
+import AnswerCorrectnessCard from '@/components/AnswerCorrectnessCard';
+import ReviewCard from '@/components/ReviewCard';
 
 const Pill = styled(Button)`
   & {
@@ -30,7 +30,7 @@ const ChatSummary = () => {
   const location = useLocation();
   const { state } = location;
   const navigate = useNavigate();
-  const { studentContext } = useStudent();
+  const { student } = useStudent();
   const [isLoading, setIsLoading] = useState(true);
   const [fetchError, setFetchError] = useState(false);
   const [currentLecture, setCurrentLecture] = useState(state.lectures[0]);
@@ -59,9 +59,7 @@ const ChatSummary = () => {
         promises
       );
 
-      const filteredStudents = students.filter(
-        (s) => s.id !== studentContext?.id
-      );
+      const filteredStudents = students.filter((s) => s.id !== student?.id);
 
       setLectureReports(lectureReports);
       setCurrentLectureReport(lectureReports[0]);
@@ -78,7 +76,7 @@ const ChatSummary = () => {
         },
         replace: true,
       });
-    } catch (e) {
+    } catch {
       setFetchError(true);
     } finally {
       setIsLoading(false);
@@ -158,7 +156,7 @@ const ChatSummary = () => {
         }}
       >
         <img
-          src={studentContext?.image}
+          src={student?.image}
           style={{
             borderRadius: 12,
             objectFit: 'contain',
@@ -174,16 +172,13 @@ const ChatSummary = () => {
         </div>
       </div>
       <div style={{ marginTop: '24px' }}>
-        <OverallLectureReport
-          report={overviewReport}
-          student={studentContext}
-        />
+        <OverallLectureReport report={overviewReport} student={student} />
       </div>
       <div style={{ marginTop: '24px' }}>
         <LectureReport
           lecture={currentLecture}
           report={currentLectureReport}
-          student={studentContext}
+          student={student}
         />
       </div>
 

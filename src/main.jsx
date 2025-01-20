@@ -8,7 +8,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from '@/styles/theme';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import 'pretendard/dist/web/static/pretendard.css';
-import StudentProvider from './contexts/StudentContext';
+import StudentProvider from '@/contexts/StudentContext';
+
 import Clarity from '@microsoft/clarity';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 

@@ -10,7 +10,7 @@ const StyledModal = styled(Modal)`
 import { Box, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import Button from './ui/Button';
+import Button from '@/components/ui/Button';
 
 const ConfirmationModal = ({ topics, onConfirm, onCancel }) => {
   return (

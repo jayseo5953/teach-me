@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useStudent } from '../../contexts/StudentContext';
+import { useStudent } from '@/contexts/StudentContext';
 
 const SecondaryStudentCard = ({ student }) => {
   const navigate = useNavigate();

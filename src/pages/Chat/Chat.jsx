@@ -13,8 +13,8 @@ import ConfirmationModal from '@/components/ConfirmationModal';
 import Button from '@/components/ui/Button';
 import { useStudent } from '@/contexts/StudentContext';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { getHint } from '../../services/api/hints';
-import LoadingSpinner from '../../components/ui/LoadingSpinner';
+import { getHint } from '@/services/api/hints';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import FinishedChatModal from '@/components/FinishedChatModal';
 
 const headerHeight = '170px';
@@ -84,6 +84,7 @@ const StyledPopover = styled(Popover)`
 
 const requiredSatisfactionCount = 2;
 
+// TODO: use masked chat id in the url so that user can pick up chat on another session
 const Chat = () => {
   const { state } = useLocation();
   const { selectedTopics, lecture, subject } = state || {};
@@ -99,7 +100,7 @@ const Chat = () => {
   const [showFinished, setShowFinished] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { studentContext } = useStudent();
+  const { student } = useStudent();
   const [anchorEl, setAnchorEl] = useState(null);
   const [hint, setHint] = useState('');
   const [hintLoading, setHintLoading] = useState(true);
@@ -208,7 +209,7 @@ const Chat = () => {
             subject,
             topic: remainingTopics[1],
             userId: user.id,
-            studentId: studentContext.id,
+            studentId: student.id,
           });
 
           setCurrentLecture(lecture);

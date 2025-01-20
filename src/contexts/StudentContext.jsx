@@ -10,9 +10,7 @@ const getStudentFromLocalStorage = () => {
 };
 
 const StudentProvider = ({ children }) => {
-  const [studentContext, setStudentContext] = useState(
-    getStudentFromLocalStorage()
-  );
+  const [student, setStudentContext] = useState(getStudentFromLocalStorage());
 
   const setStudent = (student) => {
     setStudentContext(student);
@@ -25,9 +23,7 @@ const StudentProvider = ({ children }) => {
   };
 
   return (
-    <StudentContext.Provider
-      value={{ getStudents, studentContext, setStudent }}
-    >
+    <StudentContext.Provider value={{ getStudents, student, setStudent }}>
       {children}
     </StudentContext.Provider>
   );

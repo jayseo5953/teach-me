@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import { Button as MuiButton } from '@mui/material';
-import LoadingSpinner from './LoadingSpinner';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 const StyledButton = styled(MuiButton)`
   border-radius: 16px;

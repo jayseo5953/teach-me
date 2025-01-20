@@ -6,9 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { generateTopics } from '@/services/api/topics';
 import { useEffect, useState } from 'react';
-import { useStudent } from '../contexts/StudentContext';
-import PillButton from '../components/ui/PillButton';
-import ChatBubble from '../components/ui/Chat/ChatBubble';
+import { useStudent } from '@/contexts/StudentContext';
+import PillButton from '@/components/ui/PillButton';
+import ChatBubble from '@/components/ui/Chat/ChatBubble';
 
 const Title = styled.div`
   margin-bottom: 32px;
@@ -36,18 +36,18 @@ const StyledChatInput = styled(ChatInput)`
 function Dashboard() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const { studentContext } = useStudent();
+  const { student } = useStudent();
 
   const handleSubjectSelect = (subjectText) => {
     setError(null);
-    mutation.mutate({ subjectText, studentId: studentContext?.id });
+    mutation.mutate({ subjectText, studentId: student?.id });
   };
 
   useEffect(() => {
-    if (!studentContext) {
+    if (!student) {
       navigate('/select-student');
     }
-  }, [studentContext, navigate]);
+  }, [student, navigate]);
 
   const mutation = useMutation({
     mutationFn: generateTopics,
@@ -120,7 +120,7 @@ function Dashboard() {
           }}
         >
           <img
-            src={studentContext?.image}
+            src={student?.image}
             style={{
               borderRadius: 999,
               objectFit: 'contain',

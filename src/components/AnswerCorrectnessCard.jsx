@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import Sheet from './ui/Sheet';
+import Sheet from '@/components/ui/Sheet';
 
 const AnswerCorrectnessCard = ({ percentage = 70 }) => {
   // Layout for donut chart + text on the right

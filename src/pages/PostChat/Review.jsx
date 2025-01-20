@@ -1,9 +1,9 @@
 import { Box, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import LoadingSpinner from '../../components/ui/LoadingSpinner';
-import { getProperAnswers } from '../../services/api/reports';
-import ReviewTemplate from '../../components/ui/ReviewTemplate';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { getProperAnswers } from '@/services/api/reports';
+import ReviewTemplate from '@/components/ReviewTemplate';
 import Link from '@/components/ui/Link';
 import styled from 'styled-components';
 import Button from '@/components/ui/Button';

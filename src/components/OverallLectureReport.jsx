@@ -1,16 +1,7 @@
-import { ListItemText, Typography } from '@mui/material';
-import Sheet from './Sheet';
-import { List, ListItem, ListItemIcon } from '@mui/material';
-import CheckIcon from '@mui/icons-material/Check';
-import styled from 'styled-components';
+import { Typography } from '@mui/material';
+import Sheet from '@/components/ui/Sheet';
 
-const StyledListItemText = styled(ListItemText)`
-  && span {
-    font-size: 14px;
-  }
-`;
-
-const LectureReport = ({ report, lecture }) => {
+const OverallLectureReport = ({ report, student }) => {
   const renderDataRow = (key, value = 1) => {
     const valuePercentage = value * 10;
     return (
@@ -46,7 +37,7 @@ const LectureReport = ({ report, lecture }) => {
         >
           <div
             style={{
-              background: 'linear-gradient(90deg, #477BFF 0%, #0048C1 100%)',
+              background: 'linear-gradient(90deg, #C84E89 0%, #F15F79 100%)',
               width: `${valuePercentage}%`,
               height: '14px',
               borderRadius: '22px',
@@ -64,6 +55,7 @@ const LectureReport = ({ report, lecture }) => {
         sx={{
           padding: '24px',
           paddingBottom: '16px',
+          backgroundColor: '#fff',
         }}
       >
         <div
@@ -75,10 +67,10 @@ const LectureReport = ({ report, lecture }) => {
             variant="body1"
             sx={{
               fontWeight: 600,
-              color: '#477BFF',
+              color: '#FE6C89',
             }}
           >
-            Diagnose for the topic &quot;{lecture?.topic}&quot;
+            {student.name}&apos;s Diagnose
           </Typography>
         </div>
 
@@ -104,7 +96,7 @@ const LectureReport = ({ report, lecture }) => {
               </Typography>
             </div>
             <Typography display="inline" variant="h2">
-              {report?.overallScore.value}
+              {report?.totalScore}
               <Typography variant="body3" display="inline">
                 /10
               </Typography>
@@ -117,33 +109,14 @@ const LectureReport = ({ report, lecture }) => {
               width: '100%',
             }}
           >
-            {renderDataRow('Content', report['contentQuality']?.score)}
-            {renderDataRow('Delivery', report['delivery']?.score)}
+            {renderDataRow('Understanding', report['understanding']?.score)}
+            {renderDataRow('Achievement', report['achievement']?.score)}
+            {renderDataRow('Satisfaction', report['satisfaction']?.score)}
+            {renderDataRow('Enthusiasm', report['enthusiasm']?.score)}
           </div>
         </div>
-        <br />
-        <Typography variant="h4" fontWeight={500}>
-          Improvement Suggestions
-        </Typography>
-        <List>
-          {report.improvements.suggestions.map((item, index) => {
-            return (
-              <ListItem key={index}>
-                <ListItemIcon
-                  sx={{ minWidth: '32px', alignSelf: 'flex-start' }}
-                >
-                  <CheckIcon />
-                </ListItemIcon>
-                <StyledListItemText
-                  primary={item}
-                  sx={{ color: '#3c3c43eb', fontSize: '14px' }}
-                />
-              </ListItem>
-            );
-          })}
-        </List>
       </Sheet>
     </div>
   );
 };
-export default LectureReport;
+export default OverallLectureReport;
