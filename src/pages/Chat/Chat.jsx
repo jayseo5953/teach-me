@@ -2,20 +2,19 @@ import ChatInput from '@/components/ui/Chat/ChatInput';
 import ChatRow from '@/components/ui/Chat/ChatRow';
 import { createLecture, getLectureMessages } from '@/services/api/lectures';
 import LinearProgress from '@mui/material/LinearProgress';
-import createSocket from '@/services/webSocket/client';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { Box, Chip, IconButton, Popover, Typography } from '@mui/material';
+import { Box, Chip, IconButton, Typography } from '@mui/material';
 import { ArrowDownward, CheckCircle } from '@mui/icons-material';
 import { useAuth } from '@/contexts/AuthContext';
 import ConfirmationModal from '@/components/ConfirmationModal';
 import Button from '@/components/ui/Button';
 import { useStudent } from '@/contexts/StudentContext';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { getHint } from '@/services/api/hints';
-import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import FinishedChatModal from '@/components/FinishedChatModal';
+import useSocket from '@/hooks/useSocket';
+import HintPill from '@/components/HintPill';
+import useScroll from '@/hooks/useScroll';
 
 const headerHeight = '170px';
 
@@ -75,14 +74,8 @@ const ScrollToBottomButton = styled(IconButton)`
   }
 `;
 
-const StyledPopover = styled(Popover)`
-  && .MuiPaper-root {
-    border-radius: 32px;
-    margin-right: 24px;
-  }
-`;
-
-const requiredSatisfactionCount = 2;
+const RequiredSatisfactionCount = 2;
+const ChatWebSocketId = 'messageAck';
 
 // TODO: use masked chat id in the url so that user can pick up chat on another session
 const Chat = () => {
@@ -90,43 +83,37 @@ const Chat = () => {
   const { selectedTopics, lecture, subject } = state || {};
   const [incomingMessages, setIncomingMessages] = useState([]);
   const [lectures, setLectures] = useState([lecture]);
+  // TODO: Move satisfaction count logic to backend, currently the progres gets lost on refresh
   const [satisfactionCount, setSatisfactionCount] = useState(0);
-  const [isScrolledUp, setIsScrolledUp] = useState(false);
   const [currentLecture, setCurrentLecture] = useState(lecture);
   const [remainingTopics, setRemainingTopics] = useState(selectedTopics);
-  const [isFinished, setIsFinished] = useState(false);
-  const [socket, setSocket] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showFinished, setShowFinished] = useState(false);
+
   const { user } = useAuth();
   const navigate = useNavigate();
   const { student } = useStudent();
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [hint, setHint] = useState('');
-  const [hintLoading, setHintLoading] = useState(true);
-
-  /* Refs */
-  const bottomRef = useRef(null);
-  const containerRef = useRef(null);
+  const { containerRef, bottomRef, scrollToBottom, isScrolledUp } = useScroll({
+    scrollBottomDependencies: [incomingMessages],
+  });
 
   /* Calculated Variables */
-  const progress = (satisfactionCount / requiredSatisfactionCount) * 100;
   const currentTopic = remainingTopics[0];
+  const isFinished = !remainingTopics.length;
+  const progress = isFinished
+    ? 100
+    : (satisfactionCount / RequiredSatisfactionCount) * 100;
+  const confirmationTexts = selectedTopics.map((topic) => ({
+    text: topic,
+    finished: !remainingTopics.includes(topic),
+  }));
+
+  const lastQuestion = useMemo(() => {
+    const qs = incomingMessages.filter((m) => m.sender === 'STUDENT');
+    return qs[qs.length - 1];
+  }, [incomingMessages]);
 
   /* Handlers */
-  const handleScroll = () => {
-    const container = containerRef.current;
-    if (container) {
-      setIsScrolledUp(
-        container.scrollHeight - container.scrollTop >
-          container.clientHeight + 200
-      );
-    }
-  };
-
-  const scrollToBottom = () => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
   const sendMessage = (message) => {
     if (message.trim()) {
       const payload = {
@@ -137,40 +124,20 @@ const Chat = () => {
     }
   };
 
-  const handleClick = async (event) => {
-    setAnchorEl(event.currentTarget);
+  const proceedToNextTopic = useCallback(async () => {
+    const lecture = await createLecture({
+      subject,
+      topic: remainingTopics[1],
+      userId: user.id,
+      studentId: student.id,
+    });
 
-    setHintLoading(true);
-    const filterStudentQuestions = incomingMessages.filter(
-      (m) => m.sender === 'STUDENT'
-    );
-    const lastQuestion =
-      filterStudentQuestions[filterStudentQuestions.length - 1];
-
-    const hint = await getHint(lastQuestion.content);
-
-    setHint(hint);
-    setHintLoading(false);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  // const handleUseHint = (hint) => {
-  //   sendMessage(hint);
-  //   handleClose();
-  // };
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+    setCurrentLecture(lecture);
+    setLectures((prev) => [...prev, lecture]);
+    setSatisfactionCount(0); // Reset satisfaction count
+  }, [subject, remainingTopics, user.id, student.id]);
 
   /* UseEffect */
-  useEffect(() => {
-    const container = containerRef.current;
-    container?.addEventListener('scroll', handleScroll);
-    return () => container?.removeEventListener('scroll', handleScroll);
-  }, []);
 
   useEffect(() => {
     scrollToBottom();
@@ -183,66 +150,32 @@ const Chat = () => {
     })();
   }, [currentLecture.id]);
 
-  useEffect(() => {
-    if (isFinished) {
-      setSatisfactionCount(requiredSatisfactionCount);
-      setRemainingTopics([]);
-    }
-  }, [isFinished]);
-
-  useEffect(() => {
-    if (!user) {
-      return;
-    }
-    const _socket = createSocket(user.id);
-    setSocket(_socket);
-    _socket.connect();
-    _socket.on('messageAck', async (data) => {
+  const socketHandler = useCallback(
+    async (data) => {
       const { message, isSatisfactory } = data;
 
-      if (isSatisfactory) {
-        if (satisfactionCount + 1 >= requiredSatisfactionCount) {
-          if (remainingTopics.length === 1) {
-            return setIsFinished(true);
-          }
-          const lecture = await createLecture({
-            subject,
-            topic: remainingTopics[1],
-            userId: user.id,
-            studentId: student.id,
-          });
+      if (!isSatisfactory) {
+        return setIncomingMessages((prev) => [...prev, message]);
+      }
 
-          setCurrentLecture(lecture);
-          setLectures([...lectures, lecture]);
-          setSatisfactionCount(0);
-          setRemainingTopics((prev) =>
-            prev.filter((topic) => topic !== currentTopic)
-          );
-        } else {
-          setSatisfactionCount((prev) => prev + 1);
-          setIncomingMessages((prev) => [...prev, message]);
-        }
+      if (satisfactionCount === RequiredSatisfactionCount - 1) {
+        if (remainingTopics.length > 1) await proceedToNextTopic();
+        setRemainingTopics((prev) =>
+          prev.filter((topic) => topic !== currentTopic)
+        );
       } else {
+        setSatisfactionCount((prev) => prev + 1);
         setIncomingMessages((prev) => [...prev, message]);
       }
-    });
-
-    // Handle Connection Errors
-    _socket.on('connect_error', (err) => {
-      console.error('Connection Error:', err.message);
-    });
-
-    // Cleanup on Unmount
-    return () => {
-      _socket.off('messageAck');
-      _socket.disconnect();
-    };
-  }, [remainingTopics, lecture, satisfactionCount, user]);
-
-  const confirmationTexts = selectedTopics.map((topic) => ({
-    text: topic,
-    finished: !remainingTopics.includes(topic),
-  }));
+    },
+    [
+      satisfactionCount,
+      remainingTopics.length,
+      proceedToNextTopic,
+      currentTopic,
+    ]
+  );
+  const [socket] = useSocket(user.id, ChatWebSocketId, socketHandler);
 
   return (
     <ChatWrapper ref={containerRef}>
@@ -267,7 +200,6 @@ const Chat = () => {
         <Nav>
           <Button onClick={() => setShowConfirmation(true)}>End Chat</Button>
         </Nav>
-
         <div>
           <Box
             sx={{
@@ -315,63 +247,17 @@ const Chat = () => {
           </Box>
 
           <br />
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
+          <Box
+            display={'flex'}
+            flexDirection={'row'}
+            alignItems={'center'}
+            justifyContent={'space-between'}
           >
             <Typography variant="h3">Topic: {currentTopic}</Typography>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              <Button
-                variant="contained"
-                onClick={async (e) => await handleClick(e)}
-                startIcon={<HelpOutlineIcon />}
-                sx={{ backgroundColor: 'primary.95', color: 'primary.dark' }}
-                style={{ padding: '4px 12px' }}
-              >
-                Hint
-              </Button>
-              <StyledPopover
-                id={id}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
-                }}
-              >
-                <div
-                  style={{
-                    padding: '24px',
-                    background: '#fff',
-                  }}
-                >
-                  {hintLoading ? (
-                    <LoadingSpinner />
-                  ) : (
-                    <Box>
-                      <Typography>{hint}</Typography>
-                      {/* <Button
-                        sx={{ margin: 'auto', display: 'block' }}
-                        onClick={() => handleUseHint(hint)}
-                      >
-                        Use this hint
-                      </Button> */}
-                    </Box>
-                  )}
-                </div>
-              </StyledPopover>
-            </div>
-          </div>
+            <Box display={'flex'} alignItems={'center'}>
+              {lastQuestion && <HintPill question={lastQuestion} />}
+            </Box>
+          </Box>
         </div>
       </Header>
 
