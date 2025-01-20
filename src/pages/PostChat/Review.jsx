@@ -149,25 +149,25 @@ const Review = () => {
       </CenteredBox>
 
       <SpacedBox>
-        {goodAnswers && (
+        {!!goodAnswers?.length && (
           <StyledSheet>
             <Typography variant="h3" color={green[500]}>
               Good Answers
             </Typography>
 
-            {goodAnswers?.map((answer, index) => (
+            {goodAnswers.map((answer, index) => (
               <AnswerAnalysis key={index} answer={answer} />
             ))}
           </StyledSheet>
         )}
 
-        {badAnswers && (
+        {!!badAnswers?.length && (
           <StyledSheet>
             <Typography variant="h3" color={pink[500]}>
               Bad Answers
             </Typography>
 
-            {badAnswers?.map((answer, index) => (
+            {badAnswers.map((answer, index) => (
               <AnswerAnalysis key={index} answer={answer} />
             ))}
           </StyledSheet>

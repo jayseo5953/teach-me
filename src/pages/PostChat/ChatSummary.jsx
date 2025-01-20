@@ -8,35 +8,40 @@ import { useState } from 'react';
 import { getLectureRport, getOverallReport } from '@/services/api/reports';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { getStudents } from '@/services/api/students';
-import SecondaryStudentCard from '@/components/SecondaryStudentCard';
 import LectureReport from '@/components/LectureReport';
 import Button from '@/components/ui/Button';
-import styled from 'styled-components';
 import AnswerCorrectnessCard from '@/components/AnswerCorrectnessCard';
-import ReviewCard from '@/components/ReviewCard';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useQueries } from '@tanstack/react-query';
 import {
   SpacedBox,
   CenteredBox,
   CenteredSpacedBox,
 } from '@/components/styled/Boxes';
+import StudentCard from '@/components/StudentCard';
+import PillButton from '@/components/ui/PillButton';
+import Sheet from '@/components/ui/Sheet';
+import styled from 'styled-components';
 
-const Pill = styled(Button)`
-  & {
-    border-radius: 999px; /* Pill Shape */
-    padding: 2px 24px;
-    margin-left: 4px;
-    height: 31px;
-    white-space: nowrap;
-    margin-bottom: 4px;
-  }
+const BookMarkWrapper = styled(CenteredBox)`
+  width: 32px;
+  height: 32px;
+  background-color: #f5f5f5;
+  border-radius: 50%;
 `;
+const BookMarkIcon = () => (
+  <BookMarkWrapper>
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="red">
+      <path d="M17 3H7a2 2 0 0 0-2 2v14l6-3.75L17 19V5a2 2 0 0 0-2-2z" />
+    </svg>
+  </BookMarkWrapper>
+);
 
 const ChatSummary = () => {
   const location = useLocation();
   const { state } = location;
   const navigate = useNavigate();
-  const { student } = useStudent();
+  const { student, setStudent } = useStudent();
   const [currentLectureIndex, setCurrentLectureIndex] = useState(0);
 
   const results = useQueries({
@@ -72,6 +77,11 @@ const ChatSummary = () => {
     failedQueries.forEach((query) => {
       query.refetch();
     });
+  };
+
+  const handleSelectStudent = (student) => {
+    setStudent(student);
+    navigate('/dashboard');
   };
 
   if (isLoading) {
@@ -134,7 +144,7 @@ const ChatSummary = () => {
         />
       </SpacedBox>
 
-      <CenteredSpacedBox flexDirection={'column'} style={{ marginTop: '8px' }}>
+      <CenteredSpacedBox flexDirection={'column'} style={{ marginTop: '16px' }}>
         <Typography variant="caption1" color="primary">
           Select a topic to view a topic report
         </Typography>
@@ -148,17 +158,17 @@ const ChatSummary = () => {
           }}
         >
           {state.lectures.map((lecture, index) => (
-            <Pill
+            <PillButton
               variant={
                 lecture.topic === currentLecture.topic
                   ? 'contained'
                   : 'outlined'
               }
+              selected={lecture.topic === currentLecture.topic}
               key={lecture.id}
               onClick={() => setCurrentLectureIndex(index)}
-            >
-              {lecture.topic}
-            </Pill>
+              label={lecture.topic}
+            />
           ))}
         </Box>
       </CenteredSpacedBox>
@@ -167,7 +177,12 @@ const ChatSummary = () => {
         <Typography variant="h3">Try with other students</Typography>
         <Box marginTop={'8px'} display={'flex'} flexDirection={'row'}>
           {students.map((student) => (
-            <SecondaryStudentCard key={student.id} student={student} />
+            <StudentCard
+              key={student.id}
+              student={student}
+              onClick={() => handleSelectStudent(student)}
+              type="secondary"
+            />
           ))}
         </Box>
       </SpacedBox>
@@ -181,7 +196,17 @@ const ChatSummary = () => {
         />
       </SpacedBox>
       <SpacedBox>
-        <ReviewCard onClick={() => navigate('review', { state })} />
+        <Sheet isFullWidth onClick={() => navigate('review', { state })}>
+          <Box display={'flex'} justifyContent="space-between">
+            <CenteredBox>
+              <BookMarkIcon />
+              <Typography marginLeft="8px">Review the lecture</Typography>
+            </CenteredBox>
+            <div>
+              <ChevronRightIcon />
+            </div>
+          </Box>
+        </Sheet>
       </SpacedBox>
 
       <SpacedBox>
