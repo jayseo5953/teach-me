@@ -2,7 +2,7 @@ import ChatInput from '@/components/ui/Chat/ChatInput';
 import ChatRow from '@/components/ui/Chat/ChatRow';
 import { createLecture, getLectureMessages } from '@/services/api/lectures';
 import LinearProgress from '@mui/material/LinearProgress';
-import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Box, Chip, IconButton, Typography } from '@mui/material';
@@ -14,6 +14,7 @@ import { useStudent } from '@/contexts/StudentContext';
 import FinishedChatModal from '@/components/FinishedChatModal';
 import useSocket from '@/hooks/useSocket';
 import HintPill from '@/components/HintPill';
+import useScroll from '@/hooks/useScroll';
 
 const headerHeight = '170px';
 
@@ -83,7 +84,6 @@ const Chat = () => {
   const [incomingMessages, setIncomingMessages] = useState([]);
   const [lectures, setLectures] = useState([lecture]);
   const [satisfactionCount, setSatisfactionCount] = useState(0);
-  const [isScrolledUp, setIsScrolledUp] = useState(false);
   const [currentLecture, setCurrentLecture] = useState(lecture);
   const [remainingTopics, setRemainingTopics] = useState(selectedTopics);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -92,10 +92,9 @@ const Chat = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { student } = useStudent();
-
-  /* Refs */
-  const bottomRef = useRef(null);
-  const containerRef = useRef(null);
+  const { containerRef, bottomRef, scrollToBottom, isScrolledUp } = useScroll({
+    scrollBottomDependencies: [incomingMessages],
+  });
 
   /* Calculated Variables */
   const currentTopic = remainingTopics[0];
@@ -114,19 +113,6 @@ const Chat = () => {
   }, [incomingMessages]);
 
   /* Handlers */
-  const handleScroll = () => {
-    const container = containerRef.current;
-    if (container) {
-      setIsScrolledUp(
-        container.scrollHeight - container.scrollTop >
-          container.clientHeight + 200
-      );
-    }
-  };
-
-  const scrollToBottom = () => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
   const sendMessage = (message) => {
     if (message.trim()) {
       const payload = {
@@ -151,11 +137,6 @@ const Chat = () => {
   }, [subject, remainingTopics, user.id, student.id]);
 
   /* UseEffect */
-  useEffect(() => {
-    const container = containerRef.current;
-    container?.addEventListener('scroll', handleScroll);
-    return () => container?.removeEventListener('scroll', handleScroll);
-  }, []);
 
   useEffect(() => {
     scrollToBottom();
