@@ -4,7 +4,7 @@ import { useStudent } from '@/contexts/StudentContext';
 import ChatBubble from '@/components/ui/Chat/ChatBubble';
 import { Box, Typography } from '@mui/material';
 import OverallLectureReport from '@/components/OverallLectureReport';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { getLectureRport, getOverallReport } from '@/services/api/reports';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { getStudents } from '@/services/api/students';
@@ -14,6 +14,7 @@ import Button from '@/components/ui/Button';
 import styled from 'styled-components';
 import AnswerCorrectnessCard from '@/components/AnswerCorrectnessCard';
 import ReviewCard from '@/components/ReviewCard';
+import { useQueries } from '@tanstack/react-query';
 
 const Pill = styled(Button)`
   & {
@@ -26,109 +27,78 @@ const Pill = styled(Button)`
   }
 `;
 
+const Section = styled(Box)`
+  margin-top: 24px;
+`;
+
+const CenteredBox = styled(Box)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const CenteredSection = styled(CenteredBox)`
+  margin-top: 24px;
+`;
+
 const ChatSummary = () => {
   const location = useLocation();
   const { state } = location;
   const navigate = useNavigate();
   const { student } = useStudent();
-  const [isLoading, setIsLoading] = useState(true);
-  const [fetchError, setFetchError] = useState(false);
-  const [currentLecture, setCurrentLecture] = useState(state.lectures[0]);
+  const [currentLectureIndex, setCurrentLectureIndex] = useState(0);
 
-  const [students, setStudents] = useState(state.students || []);
-  const [overviewReport, setOverviewReport] = useState(
-    state.overviewReport || {}
+  const results = useQueries({
+    queries: [
+      {
+        queryKey: ['overallReport'],
+        queryFn: () => getOverallReport(state?.lectures),
+        staleTime: Infinity,
+        retry: false,
+      },
+      {
+        queryKey: ['students', state?.students],
+        queryFn: getStudents,
+        staleTime: Infinity,
+      },
+      ...state.lectures.map((lecture) => ({
+        queryKey: ['lectureReport', lecture.id],
+        queryFn: () => getLectureRport(lecture.id),
+        staleTime: Infinity,
+      })),
+    ],
+  });
+
+  const [overviewReport, students, ...lectureReports] = results.map(
+    (result) => result.data
   );
-  const [lectureReports, setLectureReports] = useState(
-    state.lectureReports || []
-  );
-  const [currentLectureReport, setCurrentLectureReport] = useState(
-    lectureReports[0]
-  );
+  const currentLecture = state.lectures[currentLectureIndex];
+  const currentLectureReport = lectureReports[currentLectureIndex];
+  const isLoading = results.some((result) => result.isLoading);
+  const failedQueries = results.filter((result) => result.isError);
 
-  const fetchData = async () => {
-    try {
-      setFetchError(false);
-      setIsLoading(true);
-      const promises = [
-        getOverallReport(state?.lectures),
-        getStudents(),
-        ...state.lectures.map((lecture) => getLectureRport(lecture.id)),
-      ];
-      const [overviewReport, students, ...lectureReports] = await Promise.all(
-        promises
-      );
-
-      const filteredStudents = students.filter((s) => s.id !== student?.id);
-
-      setLectureReports(lectureReports);
-      setCurrentLectureReport(lectureReports[0]);
-      setOverviewReport(overviewReport);
-      setStudents(filteredStudents);
-
-      navigate('.', {
-        state: {
-          ...location.state,
-          students,
-          overviewReport,
-          lectureReports,
-          currentLectureReport,
-        },
-        replace: true,
-      });
-    } catch {
-      setFetchError(true);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    //data is already loaded from location state
-    if (currentLectureReport) {
-      return setIsLoading(false);
-    } else {
-      fetchData();
-    }
-  }, []);
-
-  const handleSelectLecture = async (index) => {
-    setCurrentLecture(state.lectures[index]);
-    setCurrentLectureReport(lectureReports[index]);
+  const retryFailedQueries = () => {
+    failedQueries.forEach((query) => {
+      query.refetch();
+    });
   };
 
   if (isLoading) {
     return (
-      <Box
-        height={'70vh'}
-        display={'flex'}
-        flexDirection={'column'}
-        justifyContent={'center'}
-      >
+      <CenteredBox height={'70vh'} flexDirection={'column'}>
         <div>
           <LoadingSpinner />
-          <div
-            style={{
-              textAlign: 'center',
-            }}
-          >
-            <Typography variant="h4" fontWeight={500}>
-              Generating final report...
-            </Typography>
-          </div>
+          <Typography variant="h4" textAlign={'center'} fontWeight={500}>
+            Generating final report...
+          </Typography>
         </div>
-      </Box>
+      </CenteredBox>
     );
   }
 
-  if (fetchError) {
+  if (failedQueries.length) {
     return (
-      <Box
-        height={'70vh'}
-        display={'flex'}
-        flexDirection={'column'}
-        justifyContent={'center'}
-      >
+      <CenteredBox height={'70vh'}>
         <div>
           <div
             style={{
@@ -138,23 +108,16 @@ const ChatSummary = () => {
             <Typography variant="h4" fontWeight={500}>
               Sorry, something went wrong.
             </Typography>
-            <Button onClick={fetchData}>Try again</Button>
+            <Button onClick={retryFailedQueries}>Try again</Button>
           </div>
         </div>
-      </Box>
+      </CenteredBox>
     );
   }
 
   return (
     <div>
-      <br />
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          width: '100%',
-        }}
-      >
+      <Section display={'flex'} flexDirection={'row'} width={'100%'}>
         <img
           src={student?.image}
           style={{
@@ -163,34 +126,24 @@ const ChatSummary = () => {
             height: '72px',
           }}
         />
-        <div
-          style={{ display: 'flex', flexDirection: 'column', width: '100%' }}
-        >
-          <ChatBubble
-            message={`I learned a lot about ${state.subject}! Thanks! ❤️`}
-          />
-        </div>
-      </div>
-      <div style={{ marginTop: '24px' }}>
+
+        <ChatBubble
+          message={`I learned a lot about ${state.subject}! Thanks! ❤️`}
+        />
+      </Section>
+
+      <Section>
         <OverallLectureReport report={overviewReport} student={student} />
-      </div>
-      <div style={{ marginTop: '24px' }}>
+      </Section>
+      <Section>
         <LectureReport
           lecture={currentLecture}
           report={currentLectureReport}
           student={student}
         />
-      </div>
+      </Section>
 
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: '4px',
-        }}
-      >
+      <CenteredSection flexDirection={'column'} style={{ marginTop: '8px' }}>
         <Typography variant="caption1" color="primary">
           Select a topic to view a topic report
         </Typography>
@@ -211,45 +164,41 @@ const ChatSummary = () => {
                   : 'outlined'
               }
               key={lecture.id}
-              onClick={() => handleSelectLecture(index)}
+              onClick={() => setCurrentLectureIndex(index)}
             >
               {lecture.topic}
             </Pill>
           ))}
         </Box>
-      </Box>
-      <div style={{ marginTop: '24px' }}>
+      </CenteredSection>
+
+      <Section>
         <Typography variant="h3">Try with other students</Typography>
-        <div
-          style={{
-            marginTop: '8px',
-            display: 'flex',
-            flexDirection: 'row',
-            marginRight: '-16px',
-          }}
-        >
+        <Box marginTop={'8px'} display={'flex'} flexDirection={'row'}>
           {students.map((student) => (
             <SecondaryStudentCard key={student.id} student={student} />
           ))}
-        </div>
-      </div>
-      <div style={{ paddingBottom: '24px' }}>
-        <div style={{ marginTop: '24px' }}>
-          <Typography variant="h3" marginBottom="8px">
-            Summary
-          </Typography>
-          <AnswerCorrectnessCard
-            percentage={overviewReport?.correctAnswerRate?.rate}
-          />
-        </div>
-        <div style={{ marginTop: '24px' }}>
-          <ReviewCard onClick={() => navigate('review', { state })} />
-        </div>
-        <br />
+        </Box>
+      </Section>
+
+      <Section>
+        <Typography variant="h3" marginBottom="8px">
+          Summary
+        </Typography>
+        <AnswerCorrectnessCard
+          percentage={overviewReport?.correctAnswerRate?.rate}
+        />
+      </Section>
+      <Section>
+        <ReviewCard onClick={() => navigate('review', { state })} />
+      </Section>
+
+      <Section>
         <Link fullWidth variant="contained" to="/dashboard">
           Return to Dashboard
         </Link>
-      </div>
+      </Section>
+      <br />
     </div>
   );
 };
