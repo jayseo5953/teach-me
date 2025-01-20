@@ -83,6 +83,7 @@ const Chat = () => {
   const { selectedTopics, lecture, subject } = state || {};
   const [incomingMessages, setIncomingMessages] = useState([]);
   const [lectures, setLectures] = useState([lecture]);
+  // TODO: Move satisfaction count logic to backend, currently the progres gets lost on refresh
   const [satisfactionCount, setSatisfactionCount] = useState(0);
   const [currentLecture, setCurrentLecture] = useState(lecture);
   const [remainingTopics, setRemainingTopics] = useState(selectedTopics);
