@@ -8,7 +8,7 @@ const PrivateRoute = () => {
   if (!user) return <Navigate to="/login" />;
 
   //TODO: remove this when we offload the dependency on location state
-  if (!state && pathname !== '/dashboard') {
+  if (!state && pathname !== '/dashboard' && pathname !== '/select-student') {
     return <Navigate to="dashboard" replace />;
   }
   return <Outlet />;
