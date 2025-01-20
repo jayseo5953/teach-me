@@ -11,12 +11,21 @@ import HideParentRoute from '@/pages/WrapperRoutes/HideParentRoute';
 import SignUp from '@/pages/SignUp';
 import SelectStudent from '@/pages/SelectStudent';
 import Review from '@/pages/PostChat/Review';
+import ChatRelatedRoute from './pages/WrapperRoutes/ChatRoute';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
     children: [
+      {
+        path: 'sign-up',
+        element: <SignUp />,
+      },
+      {
+        path: 'login',
+        element: <Login />,
+      },
       {
         element: <ProtectedRoute />,
         children: [
@@ -30,46 +39,46 @@ const router = createBrowserRouter([
             element: <SelectStudent />,
           },
           {
-            path: 'pre-chat',
-            element: (
-              <HideParentRoute
-                matchPath={'/pre-chat'}
-                PageComponent={<SelectTopic />}
-              />
-            ),
-          },
-          {
-            path: 'chat',
-            element: (
-              <HideParentRoute matchPath={'/chat'} PageComponent={<Chat />} />
-            ),
+            element: <ChatRelatedRoute />,
             children: [
               {
-                path: 'post-chat',
+                path: 'pre-chat',
                 element: (
                   <HideParentRoute
-                    matchPath={'/chat/post-chat'}
-                    PageComponent={<ChatSummary />}
+                    matchPath={'/pre-chat'}
+                    PageComponent={<SelectTopic />}
+                  />
+                ),
+              },
+              {
+                path: 'chat',
+                element: (
+                  <HideParentRoute
+                    matchPath={'/chat'}
+                    PageComponent={<Chat />}
                   />
                 ),
                 children: [
                   {
-                    path: 'review',
-                    element: <Review />,
+                    path: 'post-chat',
+                    element: (
+                      <HideParentRoute
+                        matchPath={'/chat/post-chat'}
+                        PageComponent={<ChatSummary />}
+                      />
+                    ),
+                    children: [
+                      {
+                        path: 'review',
+                        element: <Review />,
+                      },
+                    ],
                   },
                 ],
               },
             ],
           },
         ],
-      },
-      {
-        path: 'sign-up',
-        element: <SignUp />,
-      },
-      {
-        path: 'login',
-        element: <Login />,
       },
     ],
   },
