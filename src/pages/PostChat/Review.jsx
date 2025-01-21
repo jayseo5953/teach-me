@@ -120,7 +120,7 @@ const Review = () => {
               key={index}
               onClick={() => setIndexToView(index)}
               label={state.lectures[index].topic}
-            ></PillButton>
+            />
           ))}
         </CenteredBox>
       </CenteredBox>
