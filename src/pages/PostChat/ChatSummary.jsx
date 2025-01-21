@@ -6,10 +6,8 @@ import { Box, Typography } from '@mui/material';
 import OverallLectureReport from '@/components/OverallLectureReport';
 import { useState } from 'react';
 import { getLectureRport, getOverallReport } from '@/services/api/reports';
-import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { getStudents } from '@/services/api/students';
 import LectureReport from '@/components/LectureReport';
-import Button from '@/components/ui/Button';
 import AnswerCorrectnessCard from '@/components/AnswerCorrectnessCard';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useQueries } from '@tanstack/react-query';
@@ -22,6 +20,8 @@ import StudentCard from '@/components/StudentCard';
 import PillButton from '@/components/ui/PillButton';
 import Sheet from '@/components/ui/Sheet';
 import styled from 'styled-components';
+import LoadingScreen from '@/components/LoadingScreen';
+import ErrorScreen from '@/components/ErrorScreen';
 
 const BookMarkWrapper = styled(CenteredBox)`
   width: 32px;
@@ -85,35 +85,11 @@ const ChatSummary = () => {
   };
 
   if (isLoading) {
-    return (
-      <CenteredBox height={'70vh'} flexDirection={'column'}>
-        <div>
-          <LoadingSpinner />
-          <Typography variant="h4" textAlign={'center'} fontWeight={500}>
-            Generating final report...
-          </Typography>
-        </div>
-      </CenteredBox>
-    );
+    return <LoadingScreen message={'Generating final report...'} />;
   }
 
   if (failedQueries.length) {
-    return (
-      <CenteredBox height={'70vh'}>
-        <div>
-          <div
-            style={{
-              textAlign: 'center',
-            }}
-          >
-            <Typography variant="h4" fontWeight={500}>
-              Sorry, something went wrong.
-            </Typography>
-            <Button onClick={retryFailedQueries}>Try again</Button>
-          </div>
-        </div>
-      </CenteredBox>
-    );
+    return <ErrorScreen onRetry={retryFailedQueries} />;
   }
 
   return (

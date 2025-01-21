@@ -1,16 +1,16 @@
 import { Box, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { getProperAnswers } from '@/services/api/reports';
 import Link from '@/components/ui/Link';
 import PillButton from '@/components/ui/PillButton';
 import { useQueries } from '@tanstack/react-query';
-import Button from '@/components/ui/Button';
 import { CenteredBox, SpacedBox } from '@/components/styled/Boxes';
 import { green, pink } from '@mui/material/colors';
 import styled from 'styled-components';
 import Sheet from '@/components/ui/Sheet';
+import LoadingScreen from '@/components/LoadingScreen';
+import ErrorScreen from '@/components/ErrorScreen';
 
 const ReportKeys = {
   Good: 'Good Answer',
@@ -94,35 +94,12 @@ const Review = () => {
     });
   };
 
-  if (isLoading)
-    return (
-      <CenteredBox height={'70vh'} flexDirection={'column'}>
-        <div>
-          <LoadingSpinner />
-          <Typography variant="h4" textAlign={'center'} fontWeight={500}>
-            Getting all questions...
-          </Typography>
-        </div>
-      </CenteredBox>
-    );
+  if (isLoading) {
+    return <LoadingScreen message={'Generating reviews...'} />;
+  }
 
   if (failedQueries.length) {
-    return (
-      <CenteredBox height={'70vh'}>
-        <div>
-          <div
-            style={{
-              textAlign: 'center',
-            }}
-          >
-            <Typography variant="h4" fontWeight={500}>
-              Sorry, something went wrong.
-            </Typography>
-            <Button onClick={retryFailedQueries}>Try again</Button>
-          </div>
-        </div>
-      </CenteredBox>
-    );
+    return <ErrorScreen onRetry={retryFailedQueries} />;
   }
 
   const currentReport = reports[indexToView];
