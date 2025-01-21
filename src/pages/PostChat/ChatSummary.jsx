@@ -4,157 +4,97 @@ import { useStudent } from '@/contexts/StudentContext';
 import ChatBubble from '@/components/ui/Chat/ChatBubble';
 import { Box, Typography } from '@mui/material';
 import OverallLectureReport from '@/components/OverallLectureReport';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { getLectureRport, getOverallReport } from '@/services/api/reports';
-import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { getStudents } from '@/services/api/students';
-import SecondaryStudentCard from '@/components/SecondaryStudentCard';
 import LectureReport from '@/components/LectureReport';
-import Button from '@/components/ui/Button';
-import styled from 'styled-components';
 import AnswerCorrectnessCard from '@/components/AnswerCorrectnessCard';
-import ReviewCard from '@/components/ReviewCard';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { useQueries } from '@tanstack/react-query';
+import {
+  SpacedBox,
+  CenteredBox,
+  CenteredSpacedBox,
+} from '@/components/styled/Boxes';
+import StudentCard from '@/components/StudentCard';
+import PillButton from '@/components/ui/PillButton';
+import Sheet from '@/components/ui/Sheet';
+import styled from 'styled-components';
+import LoadingScreen from '@/components/LoadingScreen';
+import ErrorScreen from '@/components/ErrorScreen';
 
-const Pill = styled(Button)`
-  & {
-    border-radius: 999px; /* Pill Shape */
-    padding: 2px 24px;
-    margin-left: 4px;
-    height: 31px;
-    white-space: nowrap;
-    margin-bottom: 4px;
-  }
+const BookMarkWrapper = styled(CenteredBox)`
+  width: 32px;
+  height: 32px;
+  background-color: #f5f5f5;
+  border-radius: 50%;
 `;
+const BookMarkIcon = () => (
+  <BookMarkWrapper>
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="red">
+      <path d="M17 3H7a2 2 0 0 0-2 2v14l6-3.75L17 19V5a2 2 0 0 0-2-2z" />
+    </svg>
+  </BookMarkWrapper>
+);
 
 const ChatSummary = () => {
   const location = useLocation();
   const { state } = location;
   const navigate = useNavigate();
-  const { student } = useStudent();
-  const [isLoading, setIsLoading] = useState(true);
-  const [fetchError, setFetchError] = useState(false);
-  const [currentLecture, setCurrentLecture] = useState(state.lectures[0]);
+  const { student, setStudent } = useStudent();
+  const [currentLectureIndex, setCurrentLectureIndex] = useState(0);
 
-  const [students, setStudents] = useState(state.students || []);
-  const [overviewReport, setOverviewReport] = useState(
-    state.overviewReport || {}
+  const results = useQueries({
+    queries: [
+      {
+        queryKey: ['overallReport'],
+        queryFn: () => getOverallReport(state?.lectures),
+        staleTime: Infinity,
+        retry: false,
+      },
+      {
+        queryKey: ['students', state?.students],
+        queryFn: getStudents,
+        staleTime: Infinity,
+      },
+      ...state.lectures.map((lecture) => ({
+        queryKey: ['lectureReport', lecture.id],
+        queryFn: () => getLectureRport(lecture.id),
+        staleTime: Infinity,
+      })),
+    ],
+  });
+
+  const [overviewReport, students, ...lectureReports] = results.map(
+    (result) => result.data
   );
-  const [lectureReports, setLectureReports] = useState(
-    state.lectureReports || []
-  );
-  const [currentLectureReport, setCurrentLectureReport] = useState(
-    lectureReports[0]
-  );
+  const currentLecture = state.lectures[currentLectureIndex];
+  const currentLectureReport = lectureReports[currentLectureIndex];
+  const isLoading = results.some((result) => result.isLoading);
+  const failedQueries = results.filter((result) => result.isError);
 
-  const fetchData = async () => {
-    try {
-      setFetchError(false);
-      setIsLoading(true);
-      const promises = [
-        getOverallReport(state?.lectures),
-        getStudents(),
-        ...state.lectures.map((lecture) => getLectureRport(lecture.id)),
-      ];
-      const [overviewReport, students, ...lectureReports] = await Promise.all(
-        promises
-      );
-
-      const filteredStudents = students.filter((s) => s.id !== student?.id);
-
-      setLectureReports(lectureReports);
-      setCurrentLectureReport(lectureReports[0]);
-      setOverviewReport(overviewReport);
-      setStudents(filteredStudents);
-
-      navigate('.', {
-        state: {
-          ...location.state,
-          students,
-          overviewReport,
-          lectureReports,
-          currentLectureReport,
-        },
-        replace: true,
-      });
-    } catch {
-      setFetchError(true);
-    } finally {
-      setIsLoading(false);
-    }
+  const retryFailedQueries = () => {
+    failedQueries.forEach((query) => {
+      query.refetch();
+    });
   };
 
-  useEffect(() => {
-    //data is already loaded from location state
-    if (currentLectureReport) {
-      return setIsLoading(false);
-    } else {
-      fetchData();
-    }
-  }, []);
-
-  const handleSelectLecture = async (index) => {
-    setCurrentLecture(state.lectures[index]);
-    setCurrentLectureReport(lectureReports[index]);
+  const handleSelectStudent = (student) => {
+    setStudent(student);
+    navigate('/dashboard');
   };
 
   if (isLoading) {
-    return (
-      <Box
-        height={'70vh'}
-        display={'flex'}
-        flexDirection={'column'}
-        justifyContent={'center'}
-      >
-        <div>
-          <LoadingSpinner />
-          <div
-            style={{
-              textAlign: 'center',
-            }}
-          >
-            <Typography variant="h4" fontWeight={500}>
-              Generating final report...
-            </Typography>
-          </div>
-        </div>
-      </Box>
-    );
+    return <LoadingScreen message={'Generating final report...'} />;
   }
 
-  if (fetchError) {
-    return (
-      <Box
-        height={'70vh'}
-        display={'flex'}
-        flexDirection={'column'}
-        justifyContent={'center'}
-      >
-        <div>
-          <div
-            style={{
-              textAlign: 'center',
-            }}
-          >
-            <Typography variant="h4" fontWeight={500}>
-              Sorry, something went wrong.
-            </Typography>
-            <Button onClick={fetchData}>Try again</Button>
-          </div>
-        </div>
-      </Box>
-    );
+  if (failedQueries.length) {
+    return <ErrorScreen onRetry={retryFailedQueries} />;
   }
 
   return (
     <div>
-      <br />
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          width: '100%',
-        }}
-      >
+      <SpacedBox display={'flex'} flexDirection={'row'} width={'100%'}>
         <img
           src={student?.image}
           style={{
@@ -163,34 +103,24 @@ const ChatSummary = () => {
             height: '72px',
           }}
         />
-        <div
-          style={{ display: 'flex', flexDirection: 'column', width: '100%' }}
-        >
-          <ChatBubble
-            message={`I learned a lot about ${state.subject}! Thanks! ❤️`}
-          />
-        </div>
-      </div>
-      <div style={{ marginTop: '24px' }}>
+
+        <ChatBubble
+          message={`I learned a lot about ${state.subject}! Thanks! ❤️`}
+        />
+      </SpacedBox>
+
+      <SpacedBox>
         <OverallLectureReport report={overviewReport} student={student} />
-      </div>
-      <div style={{ marginTop: '24px' }}>
+      </SpacedBox>
+      <SpacedBox>
         <LectureReport
           lecture={currentLecture}
           report={currentLectureReport}
           student={student}
         />
-      </div>
+      </SpacedBox>
 
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: '4px',
-        }}
-      >
+      <CenteredSpacedBox flexDirection={'column'} style={{ marginTop: '16px' }}>
         <Typography variant="caption1" color="primary">
           Select a topic to view a topic report
         </Typography>
@@ -204,52 +134,63 @@ const ChatSummary = () => {
           }}
         >
           {state.lectures.map((lecture, index) => (
-            <Pill
+            <PillButton
               variant={
                 lecture.topic === currentLecture.topic
                   ? 'contained'
                   : 'outlined'
               }
+              selected={lecture.topic === currentLecture.topic}
               key={lecture.id}
-              onClick={() => handleSelectLecture(index)}
-            >
-              {lecture.topic}
-            </Pill>
+              onClick={() => setCurrentLectureIndex(index)}
+              label={lecture.topic}
+            />
           ))}
         </Box>
-      </Box>
-      <div style={{ marginTop: '24px' }}>
+      </CenteredSpacedBox>
+
+      <SpacedBox>
         <Typography variant="h3">Try with other students</Typography>
-        <div
-          style={{
-            marginTop: '8px',
-            display: 'flex',
-            flexDirection: 'row',
-            marginRight: '-16px',
-          }}
-        >
+        <Box marginTop={'8px'} display={'flex'} flexDirection={'row'}>
           {students.map((student) => (
-            <SecondaryStudentCard key={student.id} student={student} />
+            <StudentCard
+              key={student.id}
+              student={student}
+              onClick={() => handleSelectStudent(student)}
+              type="secondary"
+            />
           ))}
-        </div>
-      </div>
-      <div style={{ paddingBottom: '24px' }}>
-        <div style={{ marginTop: '24px' }}>
-          <Typography variant="h3" marginBottom="8px">
-            Summary
-          </Typography>
-          <AnswerCorrectnessCard
-            percentage={overviewReport?.correctAnswerRate?.rate}
-          />
-        </div>
-        <div style={{ marginTop: '24px' }}>
-          <ReviewCard onClick={() => navigate('review', { state })} />
-        </div>
-        <br />
+        </Box>
+      </SpacedBox>
+
+      <SpacedBox>
+        <Typography variant="h3" marginBottom="8px">
+          Summary
+        </Typography>
+        <AnswerCorrectnessCard
+          percentage={overviewReport?.correctAnswerRate?.rate}
+        />
+      </SpacedBox>
+      <SpacedBox>
+        <Sheet isFullWidth onClick={() => navigate('review', { state })}>
+          <Box display={'flex'} justifyContent="space-between">
+            <CenteredBox>
+              <BookMarkIcon />
+              <Typography marginLeft="8px">Review the lecture</Typography>
+            </CenteredBox>
+            <div>
+              <ChevronRightIcon />
+            </div>
+          </Box>
+        </Sheet>
+      </SpacedBox>
+
+      <SpacedBox>
         <Link fullWidth variant="contained" to="/dashboard">
           Return to Dashboard
         </Link>
-      </div>
+      </SpacedBox>
+      <br />
     </div>
   );
 };

@@ -61,7 +61,7 @@ const SelectStudent = () => {
                     key={student.id}
                     student={student}
                     isSelected={selectedStudent?.id === student.id}
-                    handleSelect={() => handleSelect(student)}
+                    onClick={() => handleSelect(student)}
                   />
                 </Grid>
               ))}
