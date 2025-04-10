@@ -13,10 +13,9 @@ import StudentProvider from '@/contexts/StudentContext';
 import Clarity from '@microsoft/clarity';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
-const projectId = import.meta.env.VITE_CLARITY_KEY || 'ppvn5adfs6';
+const projectId = import.meta.env.VITE_CLARITY_KEY;
 const oAuthAPIKey =
-  import.meta.env.VITE_GOOGLE_OAUTH_KEY ||
-  '493369403972-o4sktu4m75c598gfacii374t1vckj53p.apps.googleusercontent.com';
+  import.meta.env.VITE_GOOGLE_OAUTH_KEY;
 Clarity.init(projectId);
 const queryClient = new QueryClient();
 
