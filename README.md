@@ -21,3 +21,9 @@
 ## Check lint
 
 - run `npm run lint`
+
+## Intro Video
+- https://youtu.be/LqNQZQTb_38?si=1iMRdBtKMur8CDEh
+
+## Visit Teachme
+- https://katec-hackathon-dev.netlify.app/
